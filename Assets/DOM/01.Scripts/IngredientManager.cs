@@ -47,7 +47,5 @@ public class IngredientManager : MonoBehaviour
             curIngredient = unlockIngredients[index];
             curIngredient.Select();
         }
-        
-        
     }
 }
