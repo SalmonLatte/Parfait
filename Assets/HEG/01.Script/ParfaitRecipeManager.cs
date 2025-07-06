@@ -3,9 +3,9 @@ using UnityEngine;
 
 public class ParfaitRecipeManager : MonoBehaviour
 {
-    public Dictionary<int, ParfaitRecipeData> knownSpecialParfaits;
-    public Dictionary<int, ParfaitRecipeData> unknownSpecialParfaits;
-    public Dictionary<int, ParfaitRecipeData> cantMakeSpecialParfaits;
+    public Dictionary<int, ParfaitRecipeData> knownSpecialParfaits = new Dictionary<int, ParfaitRecipeData>();
+    public Dictionary<int, ParfaitRecipeData> unknownSpecialParfaits = new Dictionary<int, ParfaitRecipeData>();
+    public Dictionary<int, ParfaitRecipeData> cantMakeSpecialParfaits = new Dictionary<int, ParfaitRecipeData>();
     HashSet<int> knownIds;
 
     private void Start()

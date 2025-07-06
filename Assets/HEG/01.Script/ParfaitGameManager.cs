@@ -26,10 +26,18 @@ public class ParfaitGameManager : MonoBehaviour
         ingredientsDic = CSVManager.instance.ingredientsDic;
         //그 주 특별손님 고정 인원 수랑, 최대 인원 계산
         (specialFixedGeustCount, specialMaxGeustCount) = GetSpecialGuestLimit(currentDay);
+        //
+        StartCoroutine(WaitForSecond());
         //일반 손님인지 특별 손님인지 구분하고 메뉴 주문
-        OrderCustomer();
         //손님 타이머
         StartCoroutine(SpecialGuestTimerChecker());
+    }
+
+    IEnumerator WaitForSecond()
+    {
+        yield return new WaitForSeconds(3f);
+
+        OrderCustomer();
     }
 
     private void OrderCustomer()

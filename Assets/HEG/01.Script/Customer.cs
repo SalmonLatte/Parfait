@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class Customer : MonoBehaviour
 {
-    [SerializeField] private Sprite customerImage;
+    [SerializeField] private Image customerImage;
 
     [SerializeField] private Slider timeSlider;
     [SerializeField] private GameObject slider;
@@ -14,13 +14,18 @@ public class Customer : MonoBehaviour
 
     [SerializeField] private Sprite[] customers;
 
+    [SerializeField] private GameObject customerParfait;
+    [SerializeField] private Image[] parfaitIngredientLayers;
+    [SerializeField] private Sprite[] ingredients;
+    [SerializeField] private GameObject[] parfaitToppingLayers;
+
     private int cur = -1;
 
     public void SpawnCustomer(bool isSpecial)
     {
         //손님 이미지 중복으로 안되게
         cur = GetCount();
-        customerImage = customers[cur];
+        customerImage.sprite = customers[cur];
         //만약 특별 손님이면 timeSlider나오고 작동하게
         if (isSpecial)
         {

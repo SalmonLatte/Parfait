@@ -22,7 +22,7 @@ public class ParfaitGenerateManager : MonoBehaviour
     // ========== 일반 파르페 생성 ==========
     public int[] GenerateNormalParfait()
     {
-        int[] layerWeights = { 10, 15, 20, 20, 20, 15 }; // 1~6단
+        int[] layerWeights = { 0, 0, 35, 30, 20, 15 }; // 1~6단
         int totalWeight = 100;
         int rand = Random.Range(0, totalWeight);
         int count = 1;
@@ -41,6 +41,7 @@ public class ParfaitGenerateManager : MonoBehaviour
         for (int i = 0; i < count; i++)
         {
             int id = Random.Range(0, unlockedIngredients.Count);
+            print(id);
             result[i] = unlockedIngredients[id].GetID();
         }
         return result;
