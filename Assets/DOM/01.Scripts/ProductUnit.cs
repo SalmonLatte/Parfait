@@ -12,6 +12,7 @@ public class ProductUnit : MonoBehaviour
     [SerializeField] private GameObject soldOutImage;
 
     private Button productButton;
+    private int productID;
     private int price;
     private bool isLock;
     private bool isSoldOut;
@@ -24,15 +25,17 @@ public class ProductUnit : MonoBehaviour
         productButton.onClick.AddListener(Buy);
     }
 
-    public void SetInfo(Sprite productSprite, string name, int price, bool isLock, bool isSoldOut, Action allRefresh)
+    public void SetInfo(IngredientData data, bool isLock, bool isSoldOut, Action allRefresh)
     {
-        productImage.sprite = productSprite;
-        nameText.text = name;
-        priceText.text = price.ToString();
-        this.price = price;
+        productID = data.id;
+        productImage.sprite = data.image;
+        nameText.text = data.name;
+        priceText.text = data.buyPrice.ToString();
+        price = data.buyPrice;
         this.isLock = isLock;
         this.isSoldOut = isSoldOut;
         this.allRefresh = allRefresh;
+        
         Refresh();
     }
     
@@ -56,6 +59,7 @@ public class ProductUnit : MonoBehaviour
             lockImage.SetActive(false);
             soldOutImage.SetActive(true);
             productButton.enabled = false;
+            priceText.text = "SOLD OUT";
         }
         else if (isLock || SaveLoadManager.Instance.Money < price)
         {
@@ -73,9 +77,16 @@ public class ProductUnit : MonoBehaviour
 
     public void Buy()
     {
+        Debug.Log("$$$$$$$$$$$" + isLock + ", " + isSoldOut);
+        if (isLock || isSoldOut)
+            return;
         SaveLoadManager.Instance.Money -= price;
+        Debug.Log(SaveLoadManager.Instance.Money);
+        isSoldOut = true;
         allRefresh?.Invoke();
     }
     
     public void SetLock(bool b) { isLock = b; }
+    public int GetID() { return productID; }
+    public bool IsSoldOut() { return isSoldOut; }
 }
