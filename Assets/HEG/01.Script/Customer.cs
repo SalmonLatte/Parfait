@@ -82,4 +82,21 @@ public class Customer : MonoBehaviour
             }
         }
     }
+
+    public void ShowCustomerParfaitUI(ParfaitRecipeData data)
+    {
+        for (int i = 0; i < 8; i++)
+        {
+            if (i == 7 || data.ingredientIds[i + 1] == 0)
+            {
+                parfaitToppingLayers[i].transform.GetChild(data.ingredientIds[i] % 100).gameObject.SetActive(true);
+                return;
+            }
+            else
+            {
+                parfaitIngredientLayers[i].enabled = true;
+                parfaitIngredientLayers[i].sprite = ingredients[data.ingredientIds[i] % 100];
+            }
+        }
+    }
 }

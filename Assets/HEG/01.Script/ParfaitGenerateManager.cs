@@ -6,7 +6,6 @@ public class ParfaitGenerateManager : MonoBehaviour
     public static ParfaitGenerateManager instance;
 
     [SerializeField] private ParfaitRecipeManager recipeManager;
-    private Dictionary<int, ParfaitRecipeData> parfaitRecipeDic;
     public List<UI_Ingredient> unlockedIngredients;
 
     private void Awake()
@@ -14,37 +13,21 @@ public class ParfaitGenerateManager : MonoBehaviour
         instance = this;
     }
 
-    private void Start()
-    {
-        parfaitRecipeDic = CSVManager.instance.parfaitRecipeDic;
-    }
-
     // ========== 일반 파르페 생성 ==========
-    public int[] GenerateNormalParfait()
+    public ParfaitRecipeData GenerateRandomNormalParfait()
     {
-        int[] layerWeights = { 0, 0, 35, 30, 20, 15 }; // 1~6단
-        int totalWeight = 100;
-        int rand = Random.Range(0, totalWeight);
-        int count = 1;
-        int acc = 0;
-        for (int i = 0; i < layerWeights.Length; i++)
+        if (recipeManager.makeableNormalParfaitDic.Count == 0)
         {
-            acc += layerWeights[i];
-            if (rand < acc)
-            {
-                count = i + 1;
-                break;
-            }
+            Debug.LogWarning("만들 수 있는 일반 파르페가 없습니다!");
+            return null;
         }
 
-        int[] result = new int[count];
-        for (int i = 0; i < count; i++)
-        {
-            int id = Random.Range(0, unlockedIngredients.Count);
-            print(id);
-            result[i] = unlockedIngredients[id].GetID();
-        }
-        return result;
+        // 딕셔너리의 값들을 리스트로 변환
+        List<ParfaitRecipeData> candidates = new List<ParfaitRecipeData>(recipeManager.makeableNormalParfaitDic.Values);
+
+        // 무작위 선택
+        int randIndex = Random.Range(0, candidates.Count);
+        return candidates[randIndex];
     }
 
     // ========== 특별 파르페 선택 ==========

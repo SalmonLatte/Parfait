@@ -52,21 +52,15 @@ public class ParfaitGameManager : MonoBehaviour
         }
         else
         {
-            int[] normal = generateManager.GenerateNormalParfait();
-            recipe = new ParfaitRecipeData
-            {
-                id = -1,
-                name = "일반 파르페",
-                ingredientIds = normal
-            };
-            curParfaitPrice = calculateMoney(normal);
+            recipe = generateManager.GenerateRandomNormalParfait();
+            curParfaitPrice = recipe.price;
         }
 
         if (recipe != null)
         {
             //이제 손님 나오고 파르페 UI에 뜨게 해야함
             customer.SpawnCustomer(isSpecial);
-            //recipeUIManager.ShowRecipe(recipe);
+            customer.ShowCustomerParfaitUI(recipe);
         }
         else
         {

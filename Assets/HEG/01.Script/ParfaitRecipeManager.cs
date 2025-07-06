@@ -6,6 +6,10 @@ public class ParfaitRecipeManager : MonoBehaviour
     public Dictionary<int, ParfaitRecipeData> knownSpecialParfaits = new Dictionary<int, ParfaitRecipeData>();
     public Dictionary<int, ParfaitRecipeData> unknownSpecialParfaits = new Dictionary<int, ParfaitRecipeData>();
     public Dictionary<int, ParfaitRecipeData> cantMakeSpecialParfaits = new Dictionary<int, ParfaitRecipeData>();
+
+    public Dictionary<int, ParfaitRecipeData> normalParfaitRecipeDic = new();
+    public Dictionary<int, ParfaitRecipeData> makeableNormalParfaitDic = new();
+
     HashSet<int> knownIds;
 
     private void Start()
@@ -47,11 +51,47 @@ public class ParfaitRecipeManager : MonoBehaviour
             }
 
             if (!canMake)
+            {
                 cantMakeSpecialParfaits[kv.Key] = recipe;
+            }
             else if (knownIds.Contains(kv.Key))
                 knownSpecialParfaits[kv.Key] = recipe;
             else
                 unknownSpecialParfaits[kv.Key] = recipe;
         }
+    }
+
+    public void UpdateMakeableNormalParfaits(List<int> unlockedIds)
+    {
+        normalParfaitRecipeDic = CSVManager.instance.normalParfaitRecipeDic;
+        makeableNormalParfaitDic.Clear();
+
+        foreach (var kv in normalParfaitRecipeDic)
+        {
+            ParfaitRecipeData recipe = kv.Value;
+            bool canMake = true;
+            string missing = "";
+
+            foreach (int id in recipe.ingredientIds)
+            {
+                if (id == 0) continue;
+                if (!unlockedIds.Contains(id))
+                {
+                    canMake = false;
+                    missing += id + ", ";
+                }
+            }
+
+            if (canMake)
+            {
+                makeableNormalParfaitDic[kv.Key] = recipe;
+            }
+            else
+            {
+                //Debug.Log($"[제외] {recipe.name} - 부족한 재료: {missing}");
+            }
+        }
+
+        Debug.Log($"현재 만들 수 있는 일반 파르페 수: {makeableNormalParfaitDic.Count}");
     }
 }

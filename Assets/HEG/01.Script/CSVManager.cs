@@ -14,6 +14,7 @@ public class IngredientData
     public int id;
     public int price;
     public int buyPrice;
+    public Sprite image;
 }
 
 [System.Serializable]
@@ -63,7 +64,8 @@ public class CSVManager : MonoBehaviour
                 name = values[0],
                 id = int.Parse(values[1]),
                 price = int.Parse(values[2]),
-                buyPrice = int.Parse(values[3])
+                buyPrice = int.Parse(values[3]),
+                image = Resources.Load<Sprite>((int.Parse(values[1]).ToString()))
             };
 
             ingredientsDic[data.id] = data;
