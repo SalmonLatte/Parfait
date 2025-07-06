@@ -95,6 +95,8 @@ MonoBehaviour:
   ingredientImg: {fileID: 6408740851741670469}
   selectImg: {fileID: 1120748936483782484}
   isLock: 0
+  ingredientId: 0
+  btn: {fileID: 0}
 --- !u!1 &438838467874368813
 GameObject:
   m_ObjectHideFlags: 0
