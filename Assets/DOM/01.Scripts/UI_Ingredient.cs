@@ -9,11 +9,26 @@ public class UI_Ingredient : MonoBehaviour
     [SerializeField] private Image ingredientImg;
     [SerializeField] private Image selectImg;
     [SerializeField] private bool isLock = true;
+    [SerializeField] private int ingredientId;
 
     private void Start()
     {
         CheckUnlock();
     }
+
+    public void SetID(int id)
+    {
+        ingredientId = id;
+    }
+
+    //재료 id얻기
+    public int GetID() 
+    {
+        return ingredientId;
+    }
+
+    //재료 잠겼는지 안 잠겼는지
+    public bool IsLock() { return isLock; }
 
     //재료 이미지 세팅
     public void SetInfo()
@@ -34,10 +49,10 @@ public class UI_Ingredient : MonoBehaviour
         selectImg.gameObject.SetActive(true);
     }
 
+    //선택되지않음
     public void UnSelect()
     {
         selectImg.gameObject.SetActive(false);
 
     }
-    public bool IsLock() { return isLock; }
 }
