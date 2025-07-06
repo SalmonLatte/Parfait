@@ -1,9 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ParfaitGameManager : MonoBehaviour
 {
+    public static ParfaitGameManager instance;
     public int currentDay = 1;
 
     public ParfaitRecipeManager recipeManager;
@@ -12,6 +15,7 @@ public class ParfaitGameManager : MonoBehaviour
     Dictionary<int, IngredientData> ingredientsDic;
 
     private int curParfaitPrice = 0;
+    private int todayTotal = 0;
 
     private int specialGeustCount = 0;
     private int specialMaxGeustCount = 0;
@@ -19,26 +23,74 @@ public class ParfaitGameManager : MonoBehaviour
 
     float specialGuestTimer;
 
+    [SerializeField] private float totalTime = 120f;
+    private float remainingTime;
+    public Slider timerSlider;
+    [SerializeField] private TextMeshProUGUI timerText;
+
     [SerializeField] private Customer customer;
     [SerializeField] private ParfaitBuilder parfaitBuilder;
+
+    [SerializeField] private GameObject resultUI;
+
+    public bool canClick = false;
+    public bool isFinish = false;
+    public bool isSuccess = false;
+
+    private void Awake()
+    {
+        instance = this;
+    }
 
     private void Start()
     {
         ingredientsDic = CSVManager.instance.ingredientsDic;
         //그 주 특별손님 고정 인원 수랑, 최대 인원 계산
         (specialFixedGeustCount, specialMaxGeustCount) = GetSpecialGuestLimit(currentDay);
-        //
-        StartCoroutine(WaitForSecond());
+        // 하루 타이머 시작
+        StartDay();
         //일반 손님인지 특별 손님인지 구분하고 메뉴 주문
+        StartCoroutine(WaitForSecond(1));
         //손님 타이머
         StartCoroutine(SpecialGuestTimerChecker());
     }
 
-    IEnumerator WaitForSecond()
+    void StartDay()
     {
-        yield return new WaitForSeconds(3f);
+        remainingTime = totalTime;
+        timerSlider.maxValue = totalTime;
+        timerSlider.value = totalTime;
+        StartCoroutine(DayTimerRoutine());
+    }
 
+    IEnumerator DayTimerRoutine()
+    {
+        while (remainingTime > 0f)
+        {
+            remainingTime -= Time.deltaTime;
+
+            timerSlider.value = remainingTime;
+
+            int displayTime = Mathf.CeilToInt(remainingTime);
+            timerText.text = $"{displayTime}초";
+
+            yield return null;
+        }
+
+        // 종료 처리
+        timerSlider.value = 0f;
+        timerText.text = "0초";
+        TryEndDay();
+
+        Debug.Log("하루 종료! 다음 손님 또는 다음 날로 전환");
+    }
+
+    public IEnumerator WaitForSecond(float duration)
+    {
+        Debug.Log("새로운 손님 호출");
+        yield return new WaitForSeconds(duration);
         OrderCustomer();
+        customer.ComeCustomer();
     }
 
     private void OrderCustomer()
@@ -87,17 +139,6 @@ public class ParfaitGameManager : MonoBehaviour
         }
     }
 
-    private int calculateMoney(int[] ingredient)
-    {
-        int price = 0;
-        for (int i = 0; i < ingredient.Length; i++)
-        {
-            price += ingredientsDic[ingredient[i]].price;
-        }
-
-        return price;
-    }
-
     private bool ShouldBeSpecialCustomer(int day)
     {
         if (specialGeustCount >= specialMaxGeustCount)
@@ -135,5 +176,51 @@ public class ParfaitGameManager : MonoBehaviour
     float GetExtraChance(int day)
     {
         return Mathf.Lerp(0.1f, 0.7f, (day - 1) / 29f);
+    }
+
+    public void Fail()
+    {
+        canClick = false;
+        parfaitBuilder.ShowFail();
+        customer.FailCustomer();
+        StartCoroutine(WaitForSecond(3));
+    }
+
+    public void Success()
+    {
+        isSuccess = true;
+        canClick = false;
+        parfaitBuilder.ShowSucceess();
+        customer.SuccessCustomer();
+        todayTotal += curParfaitPrice;
+        isSuccess = false;
+        StartCoroutine(WaitForSecond(4));
+    }
+
+    public void TryEndDay()
+    {
+        StartCoroutine(WaitUntilSuccessEndsThenEndDay());
+    }
+
+    IEnumerator WaitUntilSuccessEndsThenEndDay()
+    {
+        while (isSuccess)
+        {
+            yield return null;
+        }
+        
+        customer.OutCustomer();
+        isFinish = true;
+        canClick = false;
+
+        yield return new WaitForSeconds(1);
+
+        EndDay();
+    }
+
+    private void EndDay()
+    {
+        StopAllCoroutines();
+        resultUI.SetActive(true);
     }
 }

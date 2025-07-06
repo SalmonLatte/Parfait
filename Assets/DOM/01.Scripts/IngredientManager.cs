@@ -45,6 +45,11 @@ public class IngredientManager : MonoBehaviour
 
     void Update()
     {
+        if (ParfaitGameManager.instance.isFinish == true)
+        {
+            return;
+        }
+
         float scroll = Input.GetAxis("Mouse ScrollWheel");
 
         if (scroll < 0f)
@@ -64,6 +69,8 @@ public class IngredientManager : MonoBehaviour
             SwitchIngredient();
         }
 
+        if (ParfaitGameManager.instance.canClick == false) { return; }
+        
         if (Input.GetMouseButtonDown(0)) // ¿ÞÂÊ Å¬¸¯
         {
             if (curIngredient != null)
