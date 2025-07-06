@@ -32,6 +32,7 @@ public class ParfaitGameManager : MonoBehaviour
     [SerializeField] private ParfaitBuilder parfaitBuilder;
 
     [SerializeField] private GameObject resultUI;
+    [SerializeField] private ResultManager resultManager;
 
     public bool canClick = false;
     public bool isFinish = false;
@@ -221,6 +222,7 @@ public class ParfaitGameManager : MonoBehaviour
     private void EndDay()
     {
         StopAllCoroutines();
+        resultManager.SetInfo(1, 100, todayTotal);
         resultUI.SetActive(true);
     }
 }

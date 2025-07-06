@@ -3,7 +3,7 @@ using UnityEditor.U2D.Aseprite;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Test : MonoBehaviour
+public class ParfaitUI : MonoBehaviour
 {
     [SerializeField] private Image[] parfaitIngredientLayers;
     [SerializeField] private Sprite[] ingredients;

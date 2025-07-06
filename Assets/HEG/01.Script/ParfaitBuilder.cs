@@ -16,7 +16,7 @@ public class ParfaitBuilder : MonoBehaviour
 
     [SerializeField] private RectTransform parfait;
 
-    [SerializeField] private Test miniParfait;
+    [SerializeField] private ParfaitUI miniParfait;
     [SerializeField] private RectTransform miniParfaitUI;
     [SerializeField] private Vector3 miniOriginPos;
     [SerializeField] private Vector3 parfaitPos;

@@ -147,6 +147,7 @@ public class Customer : MonoBehaviour
 
     IEnumerator SuccessEffect()
     {
+        chat.SetActive(false);
         yield return new WaitForSeconds(2f);
         yield return GoOutCustomer();
     }
@@ -188,7 +189,7 @@ public class Customer : MonoBehaviour
 
     private Tween GoOutCustomer()
     {
-        chat.SetActive( false );
+        chat.SetActive(false);
         ParfaitClear();
         Tween goOut = customerObject.DOLocalMoveY(-500, 1.5f, true).SetEase(Ease.OutBack);
         return goOut;
