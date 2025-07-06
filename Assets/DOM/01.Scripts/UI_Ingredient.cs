@@ -53,6 +53,5 @@ public class UI_Ingredient : MonoBehaviour
     public void UnSelect()
     {
         selectImg.gameObject.SetActive(false);
-
     }
 }

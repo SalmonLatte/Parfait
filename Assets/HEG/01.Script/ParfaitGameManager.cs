@@ -20,6 +20,7 @@ public class ParfaitGameManager : MonoBehaviour
     float specialGuestTimer;
 
     [SerializeField] private Customer customer;
+    [SerializeField] private ParfaitBuilder parfaitBuilder;
 
     private void Start()
     {
@@ -48,7 +49,14 @@ public class ParfaitGameManager : MonoBehaviour
         if (ShouldBeSpecialCustomer(currentDay))
         {
             recipe = generateManager.GenerateSpecialParfait();
-            isSpecial = true;
+            if (recipe == null)
+            {
+                recipe = generateManager.GenerateRandomNormalParfait();
+            }
+            else
+            {
+                isSpecial = true;
+            }
         }
         else
         {
@@ -59,6 +67,7 @@ public class ParfaitGameManager : MonoBehaviour
         if (recipe != null)
         {
             //이제 손님 나오고 파르페 UI에 뜨게 해야함
+            parfaitBuilder.StartNewRecipe(recipe.ingredientIds);
             customer.SpawnCustomer(isSpecial);
             customer.ShowCustomerParfaitUI(recipe);
         }

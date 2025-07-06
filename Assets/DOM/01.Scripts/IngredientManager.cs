@@ -9,6 +9,8 @@ public class IngredientManager : MonoBehaviour
     [SerializeField] private List<UI_Ingredient> unlockIngredients;
     [SerializeField] private ParfaitRecipeManager parfaitRecipeManager;
 
+    [SerializeField] private ParfaitBuilder parfaitBuilder;
+
     private int index = 0;
     private UI_Ingredient curIngredient;
 
@@ -61,6 +63,14 @@ public class IngredientManager : MonoBehaviour
 
             SwitchIngredient();
         }
+
+        if (Input.GetMouseButtonDown(0)) // ¿ÞÂÊ Å¬¸¯
+        {
+            if (curIngredient != null)
+            {
+                SelectCurrentIngredient();
+            }
+        }
     }
 
     private void SwitchIngredient()
@@ -90,5 +100,13 @@ public class IngredientManager : MonoBehaviour
                 return true;
         }
         return false;
+    }
+
+    private void SelectCurrentIngredient()
+    {
+        int selectedId = curIngredient.GetID();
+        Debug.Log($"Àç·á ¼±ÅÃµÊ: ID = {selectedId}");
+
+        parfaitBuilder.OnIngredientClicked(selectedId); 
     }
 }
