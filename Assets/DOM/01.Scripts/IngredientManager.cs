@@ -7,6 +7,7 @@ public class IngredientManager : MonoBehaviour
 
     [SerializeField] private UI_Ingredient[] allIngredients;
     [SerializeField] private List<UI_Ingredient> unlockIngredients;
+    [SerializeField] private ParfaitRecipeManager parfaitRecipeManager;
 
     private int index = 0;
     private UI_Ingredient curIngredient;
@@ -19,13 +20,19 @@ public class IngredientManager : MonoBehaviour
     void Start()
     {
         CSVManager cSVManager = CSVManager.instance;
-
+        List<int> ids = new List<int>();
         for (int i = 0; i < allIngredients.Length; i++)
         {
             if (!allIngredients[i].IsLock()) unlockIngredients.Add(allIngredients[i]);
             allIngredients[i].SetID(cSVManager.ingredientsDic[i + 100].id);
-            ParfaitGenerateManager.instance.unlockedIngredients = unlockIngredients;
         }
+
+        for (int i = 0; i < unlockIngredients.Count; i++)
+        {
+            print(unlockIngredients[i].GetID());
+            ids.Add(unlockIngredients[i].GetID());
+        }
+        parfaitRecipeManager.UpdateMakeableNormalParfaits(ids);
 
         if (unlockIngredients.Count > 0)
         {
