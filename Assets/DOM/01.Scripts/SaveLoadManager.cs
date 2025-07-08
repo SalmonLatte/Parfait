@@ -26,7 +26,6 @@ public class SaveLoadManager : MonoBehaviour
         {
             Destroy(gameObject); // 이미 인스턴스가 있다면 중복 방지
         }
-        
         Init();
     }
 

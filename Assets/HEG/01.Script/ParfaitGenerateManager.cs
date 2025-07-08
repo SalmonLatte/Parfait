@@ -39,13 +39,28 @@ public class ParfaitGenerateManager : MonoBehaviour
         float roll = Random.value;
 
         if (roll < 0.6f && known.Count > 0)
+        {
             return GetRandom(known);
+        }
         else if (unknown.Count > 0)
-            return GetRandom(unknown);
+        {
+            ParfaitRecipeData recipe = GetRandom(unknown);
+
+            unknown.Remove(recipe.id);
+            recipeManager.knownSpecialParfaits[recipe.id] = recipe;
+
+            recipeManager.AddKnownId(recipe.id);
+
+            return recipe;
+        }
         else if (known.Count > 0)
+        {
             return GetRandom(known);
+        }
         else
+        {
             return null;
+        }
     }
 
     private ParfaitRecipeData GetRandom(Dictionary<int, ParfaitRecipeData> dic)

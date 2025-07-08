@@ -35,7 +35,6 @@ public class Customer : MonoBehaviour
         //만약 특별 손님이면 timeSlider나오고 작동하게
         if (isSpecial)
         {
-            slider.SetActive(true);
             StartTimer(duration);
         }
     }
@@ -65,6 +64,8 @@ public class Customer : MonoBehaviour
     private IEnumerator RunTimer()
     {
         float elapsed = 0f;
+        yield return new WaitForSeconds(1);
+        slider.SetActive(true);
         while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
@@ -75,7 +76,6 @@ public class Customer : MonoBehaviour
         timeSlider.value = 0;
 
         ParfaitGameManager.instance.Fail();
-        Debug.Log("손님 인내심 끝");
     }
 
     private int GetCount()
@@ -147,6 +147,7 @@ public class Customer : MonoBehaviour
 
     IEnumerator SuccessEffect()
     {
+        ResetTimer();
         chat.SetActive(false);
         yield return new WaitForSeconds(2f);
         yield return GoOutCustomer();
@@ -166,10 +167,7 @@ public class Customer : MonoBehaviour
 
     IEnumerator FailEffect()
     {
-        if (slider.activeSelf == true)
-        {
-            ResetTimer();
-        }
+        ResetTimer();
         yield return Shake().WaitForCompletion();
         yield return GoOutCustomer();
     }

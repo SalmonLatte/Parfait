@@ -12,10 +12,8 @@ public class ParfaitGameManager : MonoBehaviour
     public ParfaitRecipeManager recipeManager;
     public ParfaitGenerateManager generateManager;
 
-    Dictionary<int, IngredientData> ingredientsDic;
-
     private int curParfaitPrice = 0;
-    private int todayTotal = 0;
+    [SerializeField]private int todayTotal = 0;
 
     private int specialGeustCount = 0;
     private int specialMaxGeustCount = 0;
@@ -45,7 +43,11 @@ public class ParfaitGameManager : MonoBehaviour
 
     private void Start()
     {
-        ingredientsDic = CSVManager.instance.ingredientsDic;
+        currentDay = SaveLoadManager.Instance.Day;
+
+        IngredientManager.Instance.Init();
+        recipeManager.Init();
+
         //그 주 특별손님 고정 인원 수랑, 최대 인원 계산
         (specialFixedGeustCount, specialMaxGeustCount) = GetSpecialGuestLimit(currentDay);
         // 하루 타이머 시작
@@ -72,15 +74,16 @@ public class ParfaitGameManager : MonoBehaviour
 
             timerSlider.value = remainingTime;
 
-            int displayTime = Mathf.CeilToInt(remainingTime);
-            timerText.text = $"{displayTime}초";
+            int minutes = Mathf.FloorToInt(remainingTime / 60f);
+            int seconds = Mathf.FloorToInt(remainingTime % 60f);
+            timerText.text = $"{minutes:0}:{seconds:00}";
 
             yield return null;
         }
 
         // 종료 처리
         timerSlider.value = 0f;
-        timerText.text = "0초";
+        timerText.text = "0:00";
         TryEndDay();
 
         Debug.Log("하루 종료! 다음 손님 또는 다음 날로 전환");
@@ -109,6 +112,8 @@ public class ParfaitGameManager : MonoBehaviour
             else
             {
                 isSpecial = true;
+                specialGeustCount++;
+                specialGuestTimer = 0;
             }
         }
         else
@@ -135,7 +140,7 @@ public class ParfaitGameManager : MonoBehaviour
         while (specialGeustCount < specialFixedGeustCount)
         {
             specialGuestTimer += 1f;
-            Debug.Log($"특별 손님 대기 시간: {specialGuestTimer}초");
+            //Debug.Log($"특별 손님 대기 시간: {specialGuestTimer}초");
             yield return new WaitForSeconds(1f);
         }
     }
@@ -148,7 +153,7 @@ public class ParfaitGameManager : MonoBehaviour
         //만약 30초 동안 특별 손님 안오면 특별손님 발생
         if (specialGeustCount < specialFixedGeustCount)
         {
-            if (specialGuestTimer >= 30)
+            if (specialGuestTimer >= 0)
             {
                 specialGuestTimer = 0;
                 return true;
@@ -176,7 +181,7 @@ public class ParfaitGameManager : MonoBehaviour
 
     float GetExtraChance(int day)
     {
-        return Mathf.Lerp(0.1f, 0.7f, (day - 1) / 29f);
+        return Mathf.Lerp(0.1f, 0.5f, (day - 1) / 29f);
     }
 
     public void Fail()
@@ -222,7 +227,14 @@ public class ParfaitGameManager : MonoBehaviour
     private void EndDay()
     {
         StopAllCoroutines();
-        resultManager.SetInfo(1, 100, todayTotal);
+        resultManager.SetInfo(currentDay, SaveLoadManager.Instance.Money, todayTotal);
         resultUI.SetActive(true);
+    }
+    
+    public void SaveData()
+    {
+        SaveLoadManager.Instance.Day += 1;
+        SaveLoadManager.Instance.Money += todayTotal;
+        SaveLoadManager.Instance.OpenRecipe = recipeManager.GetKnownRecipeIds();
     }
 }

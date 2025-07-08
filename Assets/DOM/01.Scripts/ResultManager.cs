@@ -32,6 +32,7 @@ public class ResultManager : MonoBehaviour
         initialMoneyText.text = initialMoney.ToString();
         earnedMoneyText.text = "+" + earnedMoney.ToString();
         totalMoneyText.text = (initialMoney + earnedMoney).ToString();
+        print(earnedMoney);
         for (int i = 0; i < ingredientDatas.Count; i++)
         {
             Debug.Log(ingredientDatas[i].name);

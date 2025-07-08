@@ -39,8 +39,8 @@ public class UI_Ingredient : MonoBehaviour
     //해금
     public void CheckUnlock()
     {
-        if (!isLock)
-            lockImg.gameObject.SetActive(false);
+        isLock = false;
+        lockImg.gameObject.SetActive(false);
     }
     
     //선택

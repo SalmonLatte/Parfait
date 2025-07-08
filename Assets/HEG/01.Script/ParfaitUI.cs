@@ -10,6 +10,8 @@ public class ParfaitUI : MonoBehaviour
 
     [SerializeField] private GameObject[] parfaitToppingLayers;
 
+    private int[] tmpRecipe;
+
     public void ShowCustomerParfaitUI(ParfaitRecipeData data)
     {
         for (int i = 0; i < 8; i++)
@@ -29,6 +31,7 @@ public class ParfaitUI : MonoBehaviour
 
     public void ShowCustomerParfaitUI(int[] data)
     {
+        tmpRecipe = data;
         for (int i = 0; i < 8; i++)
         {
             if (i == 7 || data[i + 1] == 0)
@@ -42,5 +45,22 @@ public class ParfaitUI : MonoBehaviour
                 parfaitIngredientLayers[i].sprite = ingredients[data[i] % 100];
             }
         }
+    }
+
+    public void ClearParfait()
+    {
+        for (int i = 0; i < 8; i++)
+        {
+            if (i == 7 || tmpRecipe[i + 1] == 0)
+            {
+                parfaitToppingLayers[i].transform.GetChild(tmpRecipe[i] % 100).gameObject.SetActive(false);
+                return;
+            }
+            else
+            {
+                parfaitIngredientLayers[i].enabled = false;
+            }
+        }
+        tmpRecipe = null;
     }
 }

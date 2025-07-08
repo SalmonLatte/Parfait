@@ -19,21 +19,31 @@ public class IngredientManager : MonoBehaviour
         Instance = this;
     }
 
-    void Start()
+    public void Init()
     {
         CSVManager cSVManager = CSVManager.instance;
-        List<int> ids = new List<int>();
+        List<int> ids = new();
+
         for (int i = 0; i < allIngredients.Length; i++)
         {
-            if (!allIngredients[i].IsLock()) unlockIngredients.Add(allIngredients[i]);
             allIngredients[i].SetID(cSVManager.ingredientsDic[i + 100].id);
         }
 
-        for (int i = 0; i < unlockIngredients.Count; i++)
+        if (SaveLoadManager.Instance.OpenIngredient != null)
         {
-            print(unlockIngredients[i].GetID());
-            ids.Add(unlockIngredients[i].GetID());
+            foreach (var ingredient in allIngredients)
+            {
+                if (SaveLoadManager.Instance.OpenIngredient.Contains(ingredient.GetID()))
+                {
+                    ingredient.CheckUnlock();
+                    unlockIngredients.Add(ingredient);
+                }
+            }
         }
+        
+        for (int i = 0; i < unlockIngredients.Count; i++)
+            ids.Add(unlockIngredients[i].GetID());
+
         parfaitRecipeManager.UpdateMakeableNormalParfaits(ids);
 
         if (unlockIngredients.Count > 0)

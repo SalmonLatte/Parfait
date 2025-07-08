@@ -75,13 +75,13 @@ public class ParfaitBuilder : MonoBehaviour
         Sequence seq = DOTween.Sequence();
         Sequence scaleSeq = DOTween.Sequence();
 
-        if (click == 8 || targetRecipe[click + 1] == 0)
+        if (click >= targetRecipe.Length - 1 || (click < targetRecipe.Length - 1 && targetRecipe[click + 1] == 0))
         {
             parfaitToppingLayers[click].transform.GetChild(id % 100).gameObject.SetActive(true);
             RectTransform rectTransform = parfaitToppingLayers[click].transform.GetChild(id % 100).GetComponent<RectTransform>();
 
             Vector3 original = rectTransform.anchoredPosition;
-            Vector3 start = original + new Vector3(0, 300); // 위에서 시작
+            Vector3 start = original + new Vector3(0, 400); // 위에서 시작
 
             rectTransform.anchoredPosition = start;
 
@@ -91,8 +91,6 @@ public class ParfaitBuilder : MonoBehaviour
             scaleSeq.Append(rectTransform.DOScale(0.7f, 0.1f).SetEase(Ease.InOutQuad));
             scaleSeq.Append(rectTransform.DOScale(1.2f, 0.1f).SetEase(Ease.OutQuad));
             scaleSeq.Append(rectTransform.DOScale(0.8f, 0.1f).SetEase(Ease.InOutQuad));
-            scaleSeq.Append(rectTransform.DOScale(1.1f, 0.1f).SetEase(Ease.OutQuad));
-            scaleSeq.Append(rectTransform.DOScale(0.9f, 0.1f).SetEase(Ease.InOutQuad));
             scaleSeq.Append(rectTransform.DOScale(1f, 0.1f).SetEase(Ease.OutElastic));
 
             seq.Insert(0f, scaleSeq);
@@ -191,6 +189,7 @@ public class ParfaitBuilder : MonoBehaviour
         parfait.anchoredPosition = parfaitPos;
         yield return new WaitForSeconds(1);
         ResetParfait();
+        miniParfait.ClearParfait();
     }
 
     private Tween RemoveParfait()

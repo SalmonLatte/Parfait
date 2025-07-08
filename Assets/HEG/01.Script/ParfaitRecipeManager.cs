@@ -12,20 +12,17 @@ public class ParfaitRecipeManager : MonoBehaviour
 
     HashSet<int> knownIds;
 
-    private void Start()
+    public void Init()
     {
-        SetknownHashcode();
+        SetknownHashcode(SaveLoadManager.Instance.OpenRecipe);
         CategorizeRecipes(CSVManager.instance.parfaitRecipeDic);
     }
 
-    private void SetknownHashcode()
+    private void SetknownHashcode(List<int> openRecipeIds)
     {
-        if (knownSpecialParfaits != null)
+        if (openRecipeIds.Count > 0)
         {
-            for (int i = 0; i < knownSpecialParfaits.Count; i++)
-            {
-                knownIds.Add(knownSpecialParfaits[i].id);
-            }
+            knownIds = new HashSet<int>(openRecipeIds);
         }
     }
 
@@ -54,11 +51,19 @@ public class ParfaitRecipeManager : MonoBehaviour
             {
                 cantMakeSpecialParfaits[kv.Key] = recipe;
             }
-            else if (knownIds.Contains(kv.Key))
+            else if (knownIds != null && knownIds.Contains(kv.Key))
                 knownSpecialParfaits[kv.Key] = recipe;
             else
                 unknownSpecialParfaits[kv.Key] = recipe;
         }
+    }
+
+    public void AddKnownId(int id)
+    {
+        if (knownIds == null)
+            knownIds = new HashSet<int>();
+
+        knownIds.Add(id);
     }
 
     public void UpdateMakeableNormalParfaits(List<int> unlockedIds)
@@ -93,5 +98,10 @@ public class ParfaitRecipeManager : MonoBehaviour
         }
 
         Debug.Log($"현재 만들 수 있는 일반 파르페 수: {makeableNormalParfaitDic.Count}");
+    }
+
+    public List<int> GetKnownRecipeIds()
+    {
+        return new List<int>(knownSpecialParfaits.Keys);
     }
 }

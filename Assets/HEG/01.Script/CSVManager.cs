@@ -23,6 +23,7 @@ public class ParfaitRecipeData
     public string name;
     public int id;
     public int price;
+    public string menu;
     public int[] ingredientIds = new int[8];
 }
 
@@ -100,10 +101,11 @@ public class CSVManager : MonoBehaviour
             data.name = values[0];
             data.id = int.Parse(values[1]);
             data.price = int.Parse(values[2]);
+            data.menu = values[3];
 
             for (int j = 0; j < 8; j++)
             {
-                data.ingredientIds[j] = int.Parse(values[3 + j]);
+                data.ingredientIds[j] = int.Parse(values[4 + j]);
             }
 
             parfaitRecipeDic[data.id] = data;
@@ -138,10 +140,11 @@ public class CSVManager : MonoBehaviour
             data.name = values[0];
             data.id = int.Parse(values[1]);
             data.price = int.Parse(values[2]);
+            data.menu = values[3];
 
             for (int j = 0; j < 8; j++)
             {
-                data.ingredientIds[j] = int.Parse(values[3 + j]);
+                data.ingredientIds[j] = int.Parse(values[4 + j]);
             }
 
             normalParfaitRecipeDic[data.id] = data;
