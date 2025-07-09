@@ -1,6 +1,7 @@
 using DG.Tweening;
 using NUnit.Framework;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using static UnityEngine.GraphicsBuffer;
@@ -9,7 +10,11 @@ public class Customer : MonoBehaviour
 {
     [SerializeField] private RectTransform customerObject;
     [SerializeField] private Image customerImage;
+    
     [SerializeField] private GameObject chat;
+    [SerializeField] private Image chatImage;
+    [SerializeField] private GameObject particle;
+
 
     [SerializeField] private Slider timeSlider;
     [SerializeField] private GameObject slider;
@@ -32,10 +37,28 @@ public class Customer : MonoBehaviour
         //손님 이미지 중복으로 안되게
         cur = GetCount();
         customerImage.sprite = customers[cur];
+        ChatEffect(isSpecial);
         //만약 특별 손님이면 timeSlider나오고 작동하게
         if (isSpecial)
         {
             StartTimer(duration);
+        }
+    }
+
+    private void ChatEffect(bool isSpecial)
+    {
+        if(isSpecial)
+        {
+            if (ColorUtility.TryParseHtmlString("#E4FFAA", out Color color))
+            {
+                chatImage.color = color;
+                particle.SetActive(true);
+            }
+        }
+        else
+        {
+            chatImage.color = Color.white;
+            particle.SetActive(false);
         }
     }
 
@@ -80,7 +103,9 @@ public class Customer : MonoBehaviour
 
     private int GetCount()
     {
-        while(true)
+        if (customers.Length <= 1) return 0;
+
+        while (true)
         {
             int count = Random.Range(0, customers.Length);
             if (count != cur)
@@ -138,6 +163,8 @@ public class Customer : MonoBehaviour
     public void OutCustomer()
     {
         StartCoroutine(OutEffect());
+        chat.SetActive(false);
+        ParfaitClear();
     }
 
     public void SuccessCustomer()
@@ -149,15 +176,15 @@ public class Customer : MonoBehaviour
     {
         ResetTimer();
         chat.SetActive(false);
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1f);
         yield return GoOutCustomer();
     }
 
     IEnumerator ComeEffect()
     {
-        yield return ComeInCustomer().WaitForCompletion();
         chat.SetActive(true);
         ParfaitGameManager.instance.canClick = true;
+        yield return ComeInCustomer().WaitForCompletion();
     }
 
     IEnumerator OutEffect()
@@ -189,13 +216,13 @@ public class Customer : MonoBehaviour
     {
         chat.SetActive(false);
         ParfaitClear();
-        Tween goOut = customerObject.DOLocalMoveY(-500, 1.5f, true).SetEase(Ease.OutBack);
+        Tween goOut = customerObject.DOLocalMoveY(-500, 1f, true).SetEase(Ease.OutBack);
         return goOut;
     }
 
     public Tween ComeInCustomer()
     {
-        Tween comeIn = customerObject.DOLocalMoveY(-40, 1f, true).SetEase(Ease.OutBack);
+        Tween comeIn = customerObject.DOLocalMoveY(-50, 1f, true).SetEase(Ease.OutBack);
         return comeIn;
     }
 }

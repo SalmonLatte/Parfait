@@ -52,10 +52,6 @@ public class ParfaitGameManager : MonoBehaviour
         (specialFixedGeustCount, specialMaxGeustCount) = GetSpecialGuestLimit(currentDay);
         // 하루 타이머 시작
         StartDay();
-        //일반 손님인지 특별 손님인지 구분하고 메뉴 주문
-        StartCoroutine(WaitForSecond(1));
-        //손님 타이머
-        StartCoroutine(SpecialGuestTimerChecker());
     }
 
     void StartDay()
@@ -64,6 +60,10 @@ public class ParfaitGameManager : MonoBehaviour
         timerSlider.maxValue = totalTime;
         timerSlider.value = totalTime;
         StartCoroutine(DayTimerRoutine());
+        //일반 손님인지 특별 손님인지 구분하고 메뉴 주문
+        StartCoroutine(WaitForSecond(1));
+        //손님 타이머
+        StartCoroutine(SpecialGuestTimerChecker());
     }
 
     IEnumerator DayTimerRoutine()
@@ -91,7 +91,6 @@ public class ParfaitGameManager : MonoBehaviour
 
     public IEnumerator WaitForSecond(float duration)
     {
-        Debug.Log("새로운 손님 호출");
         yield return new WaitForSeconds(duration);
         OrderCustomer();
         customer.ComeCustomer();
@@ -153,7 +152,7 @@ public class ParfaitGameManager : MonoBehaviour
         //만약 30초 동안 특별 손님 안오면 특별손님 발생
         if (specialGeustCount < specialFixedGeustCount)
         {
-            if (specialGuestTimer >= 0)
+            if (specialGuestTimer >= 30)
             {
                 specialGuestTimer = 0;
                 return true;
@@ -181,7 +180,7 @@ public class ParfaitGameManager : MonoBehaviour
 
     float GetExtraChance(int day)
     {
-        return Mathf.Lerp(0.1f, 0.5f, (day - 1) / 29f);
+        return Mathf.Lerp(0.1f, 0.6f, (day - 1) / 29f);
     }
 
     public void Fail()
@@ -189,7 +188,7 @@ public class ParfaitGameManager : MonoBehaviour
         canClick = false;
         parfaitBuilder.ShowFail();
         customer.FailCustomer();
-        StartCoroutine(WaitForSecond(3));
+        StartCoroutine(WaitForSecond(2));
     }
 
     public void Success()
@@ -200,7 +199,7 @@ public class ParfaitGameManager : MonoBehaviour
         customer.SuccessCustomer();
         todayTotal += curParfaitPrice;
         isSuccess = false;
-        StartCoroutine(WaitForSecond(4));
+        StartCoroutine(WaitForSecond(2.1f));
     }
 
     public void TryEndDay()
@@ -214,11 +213,13 @@ public class ParfaitGameManager : MonoBehaviour
         {
             yield return null;
         }
-        
+
+        StopAllCoroutines();
+        parfaitBuilder.Remove();
         customer.OutCustomer();
+        
         isFinish = true;
         canClick = false;
-
         yield return new WaitForSeconds(1);
 
         EndDay();
@@ -226,8 +227,9 @@ public class ParfaitGameManager : MonoBehaviour
 
     private void EndDay()
     {
-        StopAllCoroutines();
         resultManager.SetInfo(currentDay, SaveLoadManager.Instance.Money, todayTotal);
+        
+        SaveData();
         resultUI.SetActive(true);
     }
     
@@ -237,4 +239,38 @@ public class ParfaitGameManager : MonoBehaviour
         SaveLoadManager.Instance.Money += todayTotal;
         SaveLoadManager.Instance.OpenRecipe = recipeManager.GetKnownRecipeIds();
     }
+
+    public void ResetGame()
+    {
+        // 상태 초기화
+        currentDay = SaveLoadManager.Instance.Day;
+        todayTotal = 0;
+        specialGeustCount = 0;
+        specialGuestTimer = 0;
+        isFinish = false;
+        isSuccess = false;
+        canClick = false;
+
+        // 재료, 레시피 초기화
+        IngredientManager.Instance.Init();
+        recipeManager.Init();
+
+        //손님 초기화
+        customer.OutCustomer();
+
+        //파르페 초기화
+        parfaitBuilder.RemoveReset();
+
+        //위치 초기화
+
+        // 특별 손님 조건 초기화
+        (specialFixedGeustCount, specialMaxGeustCount) = GetSpecialGuestLimit(currentDay);
+
+        // UI 초기화
+        resultUI.SetActive(false);
+
+        // 타이머 및 손님 호출 재시작
+        StartDay();
+    }
+
 }

@@ -13,7 +13,7 @@ public class UI_Ingredient : MonoBehaviour
 
     private void Start()
     {
-        CheckUnlock();
+        //CheckUnlock();
     }
 
     public void SetID(int id)

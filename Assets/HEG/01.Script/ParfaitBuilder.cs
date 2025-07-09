@@ -20,13 +20,15 @@ public class ParfaitBuilder : MonoBehaviour
     [SerializeField] private RectTransform miniParfaitUI;
     [SerializeField] private Vector3 miniOriginPos;
     [SerializeField] private Vector3 parfaitPos;
+    [SerializeField] private Vector3 parfaitOriginPos;
 
     public int click = 0;
     
     void Start()
     {
         miniOriginPos = miniParfaitUI.anchoredPosition;
-        parfaitPos = new Vector3(655, -840, 0);
+        parfaitPos = new Vector3(662, -950, 0);
+        parfaitOriginPos = parfait.anchoredPosition;
     }
 
     private void Update()
@@ -84,14 +86,17 @@ public class ParfaitBuilder : MonoBehaviour
             Vector3 start = original + new Vector3(0, 400); // 위에서 시작
 
             rectTransform.anchoredPosition = start;
+            Vector3 originalScale = rectTransform.localScale;
 
             seq.Append(rectTransform.DOAnchorPos(original, 0.5f).SetEase(Ease.OutBack));
 
-            scaleSeq.Append(rectTransform.DOScale(1.3f, 0.1f).SetEase(Ease.OutQuad));
-            scaleSeq.Append(rectTransform.DOScale(0.7f, 0.1f).SetEase(Ease.InOutQuad));
-            scaleSeq.Append(rectTransform.DOScale(1.2f, 0.1f).SetEase(Ease.OutQuad));
-            scaleSeq.Append(rectTransform.DOScale(0.8f, 0.1f).SetEase(Ease.InOutQuad));
-            scaleSeq.Append(rectTransform.DOScale(1f, 0.1f).SetEase(Ease.OutElastic));
+            scaleSeq.Append(rectTransform.DOScale(originalScale * 1.3f, 0.1f).SetEase(Ease.OutQuad));
+            scaleSeq.Append(rectTransform.DOScale(originalScale * 0.7f, 0.1f).SetEase(Ease.InOutQuad));
+            scaleSeq.Append(rectTransform.DOScale(originalScale * 1.2f, 0.1f).SetEase(Ease.OutQuad));
+            scaleSeq.Append(rectTransform.DOScale(originalScale * 0.8f, 0.1f).SetEase(Ease.InOutQuad));
+            scaleSeq.Append(rectTransform.DOScale(originalScale * 1.1f, 0.1f).SetEase(Ease.OutQuad));
+            scaleSeq.Append(rectTransform.DOScale(originalScale * 0.9f, 0.1f).SetEase(Ease.InOutQuad));
+            scaleSeq.Append(rectTransform.DOScale(originalScale * 1f, 0.1f).SetEase(Ease.OutElastic));
 
             seq.Insert(0f, scaleSeq);
             return;
@@ -169,11 +174,24 @@ public class ParfaitBuilder : MonoBehaviour
         StartCoroutine(Fail());
     }
 
+    public void Remove()
+    {
+        RemoveParfait2();
+    }
+
+    public void RemoveReset()
+    {
+        ClearVisualStack();
+        miniParfait.ClearParfait();
+        miniParfaitUI.anchoredPosition = miniOriginPos;
+        parfait.anchoredPosition = parfaitOriginPos;
+    }
+
     IEnumerator Fail()
     {
         yield return RemoveParfait().WaitForCompletion();
         ClearVisualStack();
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(0.5f);
         ResetParfait();
     }
 
@@ -183,36 +201,41 @@ public class ParfaitBuilder : MonoBehaviour
         yield return GiveParfait().WaitForCompletion();
         yield return GiveMiniParfait().WaitForCompletion();
         ClearVisualStack();
-        yield return new WaitForSeconds(0.5f);
-        yield return miniParfaitUI.DOAnchorPosY(-140, 0.5f, true).SetEase(Ease.OutBack).WaitForCompletion();
+        yield return new WaitForSeconds(0.3f);
+        yield return miniParfaitUI.DOAnchorPosY(-170, 0.5f, true).SetEase(Ease.OutBack).WaitForCompletion();
         miniParfaitUI.anchoredPosition = miniOriginPos;
         parfait.anchoredPosition = parfaitPos;
-        yield return new WaitForSeconds(1);
         ResetParfait();
         miniParfait.ClearParfait();
     }
 
     private Tween RemoveParfait()
     {
-        Tween remove = parfait.DOLocalMoveY(-840, 1f, true).SetEase(Ease.InCubic);
+        Tween remove = parfait.DOLocalMoveY(-950, 1f, true).SetEase(Ease.InCubic);
+        return remove;
+    }
+
+    private Tween RemoveParfait2()
+    {
+        Tween remove = parfait.DOLocalMoveY(-950, 0.5f, true).SetEase(Ease.InCubic);
         return remove;
     }
 
     private Tween GiveParfait()
     {
-        Tween give = parfait.DOLocalMoveX(1120, 0.5f, true).SetEase(Ease.Linear);
+        Tween give = parfait.DOLocalMoveX(1160, 0.3f, true).SetEase(Ease.Linear);
         return give;
     }
 
     private Tween ResetParfait()
     {
-        Tween reset = parfait.DOLocalMoveY(-62, 1f, true).SetEase(Ease.InCubic);
+        Tween reset = parfait.DOLocalMoveY(-50, 0.5f, true).SetEase(Ease.InCubic);
         return reset;
     }
 
     private Tween GiveMiniParfait()
     {
-        Tween giveMini = miniParfaitUI.DOAnchorPosX(-296, 1f, true).SetEase(Ease.Linear);
+        Tween giveMini = miniParfaitUI.DOAnchorPosX(-470, 0.5f, true).SetEase(Ease.Linear);
         return giveMini;
     }
 }

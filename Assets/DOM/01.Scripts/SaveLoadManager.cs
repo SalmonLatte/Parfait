@@ -34,7 +34,7 @@ public class SaveLoadManager : MonoBehaviour
         Day = 1;
         Money = 100000000;
         OpenRecipe = new List<int>();
-        OpenIngredient = new List<int> { 100, 106, 107 };
+        OpenIngredient = new List<int> { 100, 101, 102, 103, 104, 105, 106, 107,108, 109, 110, 111 };
     }
 
     //데이터 저장
