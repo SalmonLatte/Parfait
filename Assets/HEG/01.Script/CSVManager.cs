@@ -41,7 +41,7 @@ public class CSVManager : MonoBehaviour
 
         Read_IngredientInfoCSV("Ingredient");
         Read_PrafaitRecipeCSV("ParfaitReciepe");
-        Read_NormalPrafaitRecipeCSV("NormalParfaitReciepe");
+        //Read_NormalPrafaitRecipeCSV("NormalParfaitReciepe");
     }
 
     private void Read_IngredientInfoCSV(string fileName)

@@ -30,6 +30,8 @@ public class Customer : MonoBehaviour
 
     private ParfaitRecipeData tmpData;
 
+    [SerializeField] private Image faceImage;
+    [SerializeField] private Sprite[] faceSprit;
     private int cur = -1;
 
     public void SpawnCustomer(bool isSpecial)
@@ -68,6 +70,7 @@ public class Customer : MonoBehaviour
         duration = customDuration;
         timeSlider.maxValue = duration;
         timeSlider.value = duration;
+        faceImage.sprite = faceSprit[0];
 
         timerCoroutine = StartCoroutine(RunTimer());
     }
@@ -81,6 +84,7 @@ public class Customer : MonoBehaviour
         }
 
         timeSlider.value = duration;
+        faceImage.sprite = faceSprit[0];
         slider.SetActive(false);
     }
 
@@ -92,7 +96,23 @@ public class Customer : MonoBehaviour
         while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
-            timeSlider.value = duration - elapsed;
+            float remaining = duration - elapsed;
+            timeSlider.value = remaining;
+
+            float ratio = remaining / duration;
+
+            // 1/3 지났으면 무표정
+            if (ratio <= 2f / 3f)
+            {
+                faceImage.sprite = faceSprit[1];
+            }
+
+            // 2/3 지났으면 화남
+            if (ratio <= 1f / 3f)
+            {
+                faceImage.sprite = faceSprit[2];
+            }
+
             yield return null;
         }
 

@@ -32,7 +32,7 @@ public class SaveLoadManager : MonoBehaviour
     private void Init()
     {
         Day = 1;
-        Money = 100000000;
+        Money = 0;
         OpenRecipe = new List<int>();
         OpenIngredient = new List<int> { 100, 101, 102, 103, 104, 105, 106, 107,108, 109, 110, 111 };
     }

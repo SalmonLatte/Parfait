@@ -10,21 +10,28 @@ public class UI_Ingredient : MonoBehaviour
     [SerializeField] private Image selectImg;
     [SerializeField] private bool isLock = true;
     [SerializeField] private int ingredientId;
+    [SerializeField] private int price;
 
     private void Start()
     {
         //CheckUnlock();
     }
 
-    public void SetID(int id)
+    public void SetInfo(int id, int price)
     {
         ingredientId = id;
+        this.price = price;
     }
 
     //재료 id얻기
     public int GetID() 
     {
         return ingredientId;
+    }
+
+    public int GetPirce()
+    {
+        return price;
     }
 
     //재료 잠겼는지 안 잠겼는지

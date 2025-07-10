@@ -1,14 +1,14 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class IngredientManager : MonoBehaviour
 {
     public static IngredientManager Instance;
 
     [SerializeField] private UI_Ingredient[] allIngredients;
-    [SerializeField] private List<UI_Ingredient> unlockIngredients;
+    public List<UI_Ingredient> unlockIngredients { get; private set; }
     [SerializeField] private ParfaitRecipeManager parfaitRecipeManager;
-
     [SerializeField] private ParfaitBuilder parfaitBuilder;
 
     private int index = 0;
@@ -17,7 +17,9 @@ public class IngredientManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+        unlockIngredients = new List<UI_Ingredient>();
     }
+
 
     public void Init()
     {
@@ -26,7 +28,7 @@ public class IngredientManager : MonoBehaviour
 
         for (int i = 0; i < allIngredients.Length; i++)
         {
-            allIngredients[i].SetID(cSVManager.ingredientsDic[i + 100].id);
+            allIngredients[i].SetInfo(cSVManager.ingredientsDic[i + 100].id, cSVManager.ingredientsDic[i+100].price);
         }
 
         if (SaveLoadManager.Instance.OpenIngredient != null)
@@ -44,7 +46,7 @@ public class IngredientManager : MonoBehaviour
         for (int i = 0; i < unlockIngredients.Count; i++)
             ids.Add(unlockIngredients[i].GetID());
 
-        parfaitRecipeManager.UpdateMakeableNormalParfaits(ids);
+        //parfaitRecipeManager.UpdateMakeableNormalParfaits(ids);
 
         if (unlockIngredients.Count > 0)
         {
@@ -59,6 +61,7 @@ public class IngredientManager : MonoBehaviour
         {
             return;
         }
+
 
         float scroll = Input.GetAxis("Mouse ScrollWheel");
 
@@ -78,6 +81,8 @@ public class IngredientManager : MonoBehaviour
 
             SwitchIngredient();
         }
+        
+        if (UIStop.isButtonPressed) return;
 
         if (ParfaitGameManager.instance.canClick == false) { return; }
         

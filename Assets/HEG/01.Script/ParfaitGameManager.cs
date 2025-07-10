@@ -29,12 +29,22 @@ public class ParfaitGameManager : MonoBehaviour
     [SerializeField] private Customer customer;
     [SerializeField] private ParfaitBuilder parfaitBuilder;
 
+    [SerializeField] private TextMeshProUGUI dayUIText;
+    [SerializeField] private TextMeshProUGUI moneyUIText;
+    [SerializeField] private MoneyEffect moneyEffect;
+
+
     [SerializeField] private GameObject resultUI;
     [SerializeField] private ResultManager resultManager;
 
     public bool canClick = false;
     public bool isFinish = false;
     public bool isSuccess = false;
+
+    private int currentMoney;
+
+    [SerializeField] private GameObject tmpSuccess;
+    [SerializeField] private GameObject tmpFail;
 
     private void Awake()
     {
@@ -56,6 +66,9 @@ public class ParfaitGameManager : MonoBehaviour
 
     void StartDay()
     {
+        dayUIText.text = "Day " + SaveLoadManager.Instance.Day.ToString();
+        moneyUIText.text = SaveLoadManager.Instance.Money.ToString();
+        currentMoney = SaveLoadManager.Instance.Money;
         remainingTime = totalTime;
         timerSlider.maxValue = totalTime;
         timerSlider.value = totalTime;
@@ -195,9 +208,13 @@ public class ParfaitGameManager : MonoBehaviour
     {
         isSuccess = true;
         canClick = false;
+        generateManager.SuccessUnknowRecipe();
         parfaitBuilder.ShowSucceess();
         customer.SuccessCustomer();
         todayTotal += curParfaitPrice;
+        moneyEffect.Init(curParfaitPrice);
+        int moeny = todayTotal + currentMoney;
+        moneyUIText.text = moeny.ToString();
         isSuccess = false;
         StartCoroutine(WaitForSecond(2.1f));
     }
@@ -217,7 +234,9 @@ public class ParfaitGameManager : MonoBehaviour
         StopAllCoroutines();
         parfaitBuilder.Remove();
         customer.OutCustomer();
-        
+        moneyEffect.Reset();
+        generateManager.ResetRecipe();
+
         isFinish = true;
         canClick = false;
         yield return new WaitForSeconds(1);
@@ -227,6 +246,16 @@ public class ParfaitGameManager : MonoBehaviour
 
     private void EndDay()
     {
+        if (currentDay >= 30 && recipeManager.knownSpecialParfaits.Count < 12)
+        {
+            tmpFail.SetActive(true);
+            return;
+        }
+        else if (currentDay < 31 && recipeManager.knownSpecialParfaits.Count >= 12)
+        {
+            tmpSuccess.SetActive(true);
+            return;
+        }
         resultManager.SetInfo(currentDay, SaveLoadManager.Instance.Money, todayTotal);
         
         SaveData();

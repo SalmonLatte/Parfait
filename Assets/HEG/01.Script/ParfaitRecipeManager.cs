@@ -66,41 +66,41 @@ public class ParfaitRecipeManager : MonoBehaviour
         knownIds.Add(id);
     }
 
-    public void UpdateMakeableNormalParfaits(List<int> unlockedIds)
-    {
-        normalParfaitRecipeDic = CSVManager.instance.normalParfaitRecipeDic;
-        Debug.Log(normalParfaitRecipeDic.Count);
-        TestTest.Instance.MenuTest();
-        makeableNormalParfaitDic.Clear();
+    //public void UpdateMakeableNormalParfaits(List<int> unlockedIds)
+    //{
+    //    normalParfaitRecipeDic = CSVManager.instance.normalParfaitRecipeDic;
+    //    Debug.Log(normalParfaitRecipeDic.Count);
+    //    TestTest.Instance.MenuTest();
+    //    makeableNormalParfaitDic.Clear();
 
-        foreach (var kv in normalParfaitRecipeDic)
-        {
-            ParfaitRecipeData recipe = kv.Value;
-            bool canMake = true;
-            string missing = "";
+    //    foreach (var kv in normalParfaitRecipeDic)
+    //    {
+    //        ParfaitRecipeData recipe = kv.Value;
+    //        bool canMake = true;
+    //        string missing = "";
 
-            foreach (int id in recipe.ingredientIds)
-            {
-                if (id == 0) continue;
-                if (!unlockedIds.Contains(id))
-                {
-                    canMake = false;
-                    missing += id + ", ";
-                }
-            }
+    //        foreach (int id in recipe.ingredientIds)
+    //        {
+    //            if (id == 0) continue;
+    //            if (!unlockedIds.Contains(id))
+    //            {
+    //                canMake = false;
+    //                missing += id + ", ";
+    //            }
+    //        }
 
-            if (canMake)
-            {
-                makeableNormalParfaitDic[kv.Key] = recipe;
-            }
-            else
-            {
-                //Debug.Log($"[����] {recipe.name} - ������ ���: {missing}");
-            }
-        }
+    //        if (canMake)
+    //        {
+    //            makeableNormalParfaitDic[kv.Key] = recipe;
+    //        }
+    //        else
+    //        {
+    //            //Debug.Log($"[����] {recipe.name} - ������ ���: {missing}");
+    //        }
+    //    }
 
-        Debug.Log($"���� ���� �� �ִ� �Ϲ� �ĸ��� ��: {makeableNormalParfaitDic.Count}");
-    }
+    //    Debug.Log($"���� ���� �� �ִ� �Ϲ� �ĸ��� ��: {makeableNormalParfaitDic.Count}");
+    //}
 
     public List<int> GetKnownRecipeIds()
     {
