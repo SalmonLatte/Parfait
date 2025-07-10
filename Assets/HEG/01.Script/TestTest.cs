@@ -1,15 +1,39 @@
+using System;
 using NUnit.Framework;
+using UnityEditor;
 using UnityEngine;
 
 public class TestTest : MonoBehaviour
 {
-    public ParfaitUI[] tests;
+    public ParfaitUI menuUnitPrefab;
+    public Transform menuUnitParent;
+    public ParfaitRecipeManager parfaitRecipeManager;
+    
+    public static TestTest Instance;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     private void Start()
     {
-        for (int i = 0; i < tests.Length; i++)
+        
+    }
+
+    [MenuItem("Menu/MenuTest")]
+    public void MenuTest()
+    {
+        Debug.Log("erwerwerwrw");
+        Debug.Log(parfaitRecipeManager.normalParfaitRecipeDic.Count);
+        foreach (var recipeDic in parfaitRecipeManager.normalParfaitRecipeDic)
         {
-            tests[i].ShowCustomerParfaitUI(CSVManager.instance.normalParfaitRecipeDic[300 + i]);
+            Debug.Log(recipeDic.Value.name);
+
+            ParfaitUI menuUnit = Instantiate(menuUnitPrefab, menuUnitParent);
+            menuUnit.ShowCustomerParfaitUI(recipeDic.Value);
         }
     }
+    
+    
 }
