@@ -62,4 +62,9 @@ public class SaveLoadManager : MonoBehaviour
         Load();
         Save();
     }
+
+    public void AddRecipe(int id)
+    {
+        
+    }
 }
