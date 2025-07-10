@@ -69,6 +69,8 @@ public class ParfaitRecipeManager : MonoBehaviour
     public void UpdateMakeableNormalParfaits(List<int> unlockedIds)
     {
         normalParfaitRecipeDic = CSVManager.instance.normalParfaitRecipeDic;
+        Debug.Log(normalParfaitRecipeDic.Count);
+        TestTest.Instance.MenuTest();
         makeableNormalParfaitDic.Clear();
 
         foreach (var kv in normalParfaitRecipeDic)
@@ -93,11 +95,11 @@ public class ParfaitRecipeManager : MonoBehaviour
             }
             else
             {
-                //Debug.Log($"[Á¦¿Ü] {recipe.name} - ºÎÁ·ÇÑ Àç·á: {missing}");
+                //Debug.Log($"[ï¿½ï¿½ï¿½ï¿½] {recipe.name} - ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½: {missing}");
             }
         }
 
-        Debug.Log($"ÇöÀç ¸¸µé ¼ö ÀÖ´Â ÀÏ¹Ý ÆÄ¸£Æä ¼ö: {makeableNormalParfaitDic.Count}");
+        Debug.Log($"ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½Ï¹ï¿½ ï¿½Ä¸ï¿½ï¿½ï¿½ ï¿½ï¿½: {makeableNormalParfaitDic.Count}");
     }
 
     public List<int> GetKnownRecipeIds()
