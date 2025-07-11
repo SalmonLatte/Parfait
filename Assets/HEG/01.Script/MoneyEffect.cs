@@ -22,6 +22,7 @@ public class MoneyEffect : MonoBehaviour
         transform.localScale = Vector3.one;
         canvasGroup.alpha = 1f;
 
+        AudioManager.Instance.PlaySFX("Coin");
         Sequence seq = DOTween.Sequence();
         seq.Append(rect.DOAnchorPosY(280f, 1.5f).SetEase(Ease.OutQuad));
         seq.Join(canvasGroup.DOFade(0f, 1.5f));

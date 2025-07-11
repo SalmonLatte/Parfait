@@ -131,4 +131,12 @@ public class IngredientManager : MonoBehaviour
 
         parfaitBuilder.OnIngredientClicked(selectedId); 
     }
+
+    public void Reset()
+    {
+        foreach(var ingredient in unlockIngredients)
+        {
+            ingredient.UnSelect();
+        }
+    }
 }

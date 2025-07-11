@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -13,6 +14,10 @@ public class AudioManager : MonoBehaviour
     
     private bool bgmOn = true;
     private bool sfxOn = true;
+
+    private int index = 0;
+    private bool isParfaitSFXPlaying = false;
+    [SerializeField] private AudioClip[] parfaitSFX;
     
     private void Awake()
     {
@@ -35,7 +40,18 @@ public class AudioManager : MonoBehaviour
             SfxOnOff(sfxOn);
         }
     }
-    
+
+    private void Update()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (isParfaitSFXPlaying == false)
+            {
+                PlaySFX("Click");
+            }
+        }
+    }
+
     public void PlaySFX(string clipName)
     {
         foreach (var clip in sfxClips)
@@ -48,6 +64,28 @@ public class AudioManager : MonoBehaviour
         }
 
         Debug.LogWarning($"[AudioManager] '{clipName}' 이름의 효과음을 찾을 수 없습니다.");
+    }
+
+    public void PlayParfaitSFX()
+    {
+        if (index == parfaitSFX.Length)
+            index = 0;
+
+        isParfaitSFXPlaying = true;
+
+        sfxSource.clip = parfaitSFX[index];
+        sfxSource.Play();
+
+        float clipLength = parfaitSFX[index].length;
+        index++;
+
+        StartCoroutine(ResetParfaitSFXFlag(clipLength));
+    }
+
+    private IEnumerator ResetParfaitSFXFlag(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        isParfaitSFXPlaying = false;
     }
 
     public void BgmOnOff(bool b)

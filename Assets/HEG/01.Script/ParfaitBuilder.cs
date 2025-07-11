@@ -77,6 +77,7 @@ public class ParfaitBuilder : MonoBehaviour
         Sequence seq = DOTween.Sequence();
         Sequence scaleSeq = DOTween.Sequence();
 
+        AudioManager.Instance.PlayParfaitSFX();
         if (click >= targetRecipe.Length - 1 || (click < targetRecipe.Length - 1 && targetRecipe[click + 1] == 0))
         {
             parfaitToppingLayers[click].transform.GetChild(id % 100).gameObject.SetActive(true);
@@ -137,6 +138,7 @@ public class ParfaitBuilder : MonoBehaviour
         }
         if (currentParfait.Count == cnt)
         {
+            AudioManager.Instance.PlaySFX("Give");
             ParfaitGameManager.instance.Success();
         }
     }
@@ -189,6 +191,7 @@ public class ParfaitBuilder : MonoBehaviour
 
     IEnumerator Fail()
     {
+        AudioManager.Instance.PlaySFX("Remove");
         yield return RemoveParfait().WaitForCompletion();
         ClearVisualStack();
         yield return new WaitForSeconds(0.5f);

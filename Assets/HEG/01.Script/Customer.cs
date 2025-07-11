@@ -43,6 +43,7 @@ public class Customer : MonoBehaviour
         //만약 특별 손님이면 timeSlider나오고 작동하게
         if (isSpecial)
         {
+            AudioManager.Instance.PlaySFX("Special");
             StartTimer(duration);
         }
     }
@@ -182,9 +183,18 @@ public class Customer : MonoBehaviour
 
     public void OutCustomer()
     {
+        StopCoroutine("ComeCustomer");
         StartCoroutine(OutEffect());
         chat.SetActive(false);
         ParfaitClear();
+    }
+
+    public IEnumerator Reset()
+    {
+        StopCoroutine("ComeCustomer");
+        ParfaitClear();
+        ResetTimer();
+        yield return StartCoroutine(OutEffect());
     }
 
     public void SuccessCustomer()
@@ -194,6 +204,7 @@ public class Customer : MonoBehaviour
 
     IEnumerator SuccessEffect()
     {
+        AudioManager.Instance.PlaySFX("Success");
         ResetTimer();
         chat.SetActive(false);
         yield return new WaitForSeconds(1f);
@@ -214,6 +225,7 @@ public class Customer : MonoBehaviour
 
     IEnumerator FailEffect()
     {
+        AudioManager.Instance.PlaySFX("Fail");
         ResetTimer();
         yield return Shake().WaitForCompletion();
         yield return GoOutCustomer();

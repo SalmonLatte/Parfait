@@ -25,6 +25,7 @@ public class UIStop : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     public void OpenSettings()
     {
         settingsUI.SetActive(true);
+        AudioManager.Instance.PlaySFX("UIOpen");
         Time.timeScale = 0f;
     }
 

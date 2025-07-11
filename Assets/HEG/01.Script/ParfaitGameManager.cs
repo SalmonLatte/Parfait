@@ -98,13 +98,12 @@ public class ParfaitGameManager : MonoBehaviour
         timerSlider.value = 0f;
         timerText.text = "0:00";
         TryEndDay();
-
-        Debug.Log("하루 종료! 다음 손님 또는 다음 날로 전환");
     }
 
     public IEnumerator WaitForSecond(float duration)
     {
         yield return new WaitForSeconds(duration);
+        AudioManager.Instance.PlaySFX("CustomerIn");
         OrderCustomer();
         customer.ComeCustomer();
     }
@@ -231,21 +230,24 @@ public class ParfaitGameManager : MonoBehaviour
             yield return null;
         }
 
-        StopAllCoroutines();
         parfaitBuilder.Remove();
-        customer.OutCustomer();
         moneyEffect.Reset();
         generateManager.ResetRecipe();
+        IngredientManager.Instance.Reset();
 
         isFinish = true;
         canClick = false;
-        yield return new WaitForSeconds(1);
+        SaveData();
 
+        yield return customer.Reset();
+        yield return new WaitForSeconds(1.5f); 
+        
         EndDay();
     }
 
     private void EndDay()
     {
+        StopAllCoroutines();
         if (currentDay >= 30 && recipeManager.knownSpecialParfaits.Count < 12)
         {
             tmpFail.SetActive(true);
@@ -258,7 +260,6 @@ public class ParfaitGameManager : MonoBehaviour
         }
         resultManager.SetInfo(currentDay, SaveLoadManager.Instance.Money, todayTotal);
         
-        SaveData();
         resultUI.SetActive(true);
     }
     
@@ -289,8 +290,6 @@ public class ParfaitGameManager : MonoBehaviour
 
         //파르페 초기화
         parfaitBuilder.RemoveReset();
-
-        //위치 초기화
 
         // 특별 손님 조건 초기화
         (specialFixedGeustCount, specialMaxGeustCount) = GetSpecialGuestLimit(currentDay);
