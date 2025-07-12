@@ -8,7 +8,6 @@ public class UIStop : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     private void Start()
     {
-        settingsUI = this.gameObject;
     }
 
 

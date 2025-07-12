@@ -239,8 +239,9 @@ public class ParfaitGameManager : MonoBehaviour
         canClick = false;
         SaveData();
 
+        StopCoroutine("WaitForSecond");
         yield return customer.Reset();
-        yield return new WaitForSeconds(1.5f); 
+        yield return new WaitForSeconds(1f); 
         
         EndDay();
     }
@@ -263,7 +264,7 @@ public class ParfaitGameManager : MonoBehaviour
         resultUI.SetActive(true);
     }
     
-    public void SaveData()
+    public void SaveData() //HEG
     {
         SaveLoadManager.Instance.Day += 1;
         SaveLoadManager.Instance.Money += todayTotal;

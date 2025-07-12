@@ -62,6 +62,7 @@ public class IngredientManager : MonoBehaviour
             return;
         }
 
+        if (UIStop.isButtonPressed || ClickControl.isUIOpen) return;
 
         float scroll = Input.GetAxis("Mouse ScrollWheel");
 
@@ -81,8 +82,6 @@ public class IngredientManager : MonoBehaviour
 
             SwitchIngredient();
         }
-        
-        if (UIStop.isButtonPressed) return;
 
         if (ParfaitGameManager.instance.canClick == false) { return; }
         
@@ -127,7 +126,6 @@ public class IngredientManager : MonoBehaviour
     private void SelectCurrentIngredient()
     {
         int selectedId = curIngredient.GetID();
-        Debug.Log($"¿Á∑· º±≈√µ : ID = {selectedId}");
 
         parfaitBuilder.OnIngredientClicked(selectedId); 
     }
