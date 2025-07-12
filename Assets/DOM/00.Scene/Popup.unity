@@ -204,7 +204,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 364.59, y: 333.04}
+  m_AnchoredPosition: {x: -344, y: 166.52}
   m_SizeDelta: {x: 464.59, y: 433.04}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &116049859
@@ -219,7 +219,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c5886d2a325d40b9b1e6f05903fe51e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Decription: {fileID: 1733440664}
+  Decription: {fileID: 0}
 --- !u!114 &116049860
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1029,6 +1029,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   recipeManager: {fileID: 1962637237}
   unlockedIngredients: []
+  comeOutSpecial: 0
+  textEffect: {fileID: 0}
 --- !u!21 &513085434
 Material:
   serializedVersion: 8
@@ -1739,6 +1741,7 @@ MonoBehaviour:
   bgmSource: {fileID: 1270393393}
   sfxSource: {fileID: 613012551}
   sfxClips: []
+  parfaitSFX: []
 --- !u!1 &709007337
 GameObject:
   m_ObjectHideFlags: 0
@@ -2519,11 +2522,16 @@ MonoBehaviour:
   timerText: {fileID: 0}
   customer: {fileID: 0}
   parfaitBuilder: {fileID: 1207895520}
+  dayUIText: {fileID: 0}
+  moneyUIText: {fileID: 0}
+  moneyEffect: {fileID: 0}
   resultUI: {fileID: 0}
   resultManager: {fileID: 0}
   canClick: 0
   isFinish: 0
   isSuccess: 0
+  tmpSuccess: {fileID: 0}
+  tmpFail: {fileID: 0}
 --- !u!1 &957246192
 GameObject:
   m_ObjectHideFlags: 0
@@ -3076,6 +3084,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curDay: 1
   dayMarker: {fileID: 1439619281}
+  stickerUnits: []
 --- !u!1 &1104826319
 GameObject:
   m_ObjectHideFlags: 0
@@ -3604,6 +3613,7 @@ MonoBehaviour:
   miniParfaitUI: {fileID: 0}
   miniOriginPos: {x: 0, y: 0, z: 0}
   parfaitPos: {x: 0, y: 0, z: 0}
+  parfaitOriginPos: {x: 0, y: 0, z: 0}
   click: 0
 --- !u!1 &1216434462
 GameObject:
@@ -5273,7 +5283,6 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  unlockIngredients: []
   parfaitRecipeManager: {fileID: 1962637237}
   parfaitBuilder: {fileID: 1207895520}
 --- !u!4 &1553871290

@@ -15,6 +15,8 @@ public class SaveLoadManager : MonoBehaviour
     public List<int> OpenRecipe;
     public List<int> OpenIngredient;
     
+    public Action<int> onGetRecipe;
+    
     private void Awake()
     {
         if (Instance == null)
@@ -65,6 +67,7 @@ public class SaveLoadManager : MonoBehaviour
 
     public void AddRecipe(int id)
     {
-        
+        OpenRecipe.Add(id);
+        onGetRecipe?.Invoke(id);
     }
 }
