@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -16,6 +17,10 @@ public class ParfaitRecipeManager : MonoBehaviour
     {
         SetknownHashcode(SaveLoadManager.Instance.OpenRecipe);
         CategorizeRecipes(CSVManager.instance.parfaitRecipeDic);
+        print(knownSpecialParfaits.Count);
+        print(unknownSpecialParfaits.Count);
+        print(cantMakeSpecialParfaits.Count);
+
     }
 
     private void SetknownHashcode(List<int> openRecipeIds)
@@ -56,6 +61,7 @@ public class ParfaitRecipeManager : MonoBehaviour
             else
                 unknownSpecialParfaits[kv.Key] = recipe;
         }
+        
     }
 
     public void AddKnownId(int id)

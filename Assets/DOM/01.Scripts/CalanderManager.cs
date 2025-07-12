@@ -1,27 +1,42 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 public class CalanderManager : MonoBehaviour
 {
+    public static CalanderManager Instance;
+    
     [SerializeField] private int curDay = 1;
     [SerializeField] private RectTransform dayMarker;
     [SerializeField] private StickerUnit[] stickerUnits;
-    
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject); // 씬 이동에도 유지
+        }
+        else
+        {
+            Destroy(gameObject); // 이미 인스턴스가 있다면 중복 방지
+        }
+    }
+
     void Start()
     {
         SetDayMarker();
         SaveLoadManager.Instance.onGetRecipe = GetRecipe;
-
-
         Init();
     }
 
-    void Init()
+    public void Init()
     {
-        ParfaitRecipeManager parfaitRecipeManager = ParfaitGameManager.instance.recipeManager;
-        List<ParfaitRecipeData> allRecipeDatas = parfaitRecipeManager.unknownSpecialParfaits.Values.ToList();
         
+        List<ParfaitRecipeData> allRecipeDatas = CSVManager.instance.parfaitRecipeDic.Values.ToList();
+        
+        // Debug.Log(parfaitRecipeManager.unknownSpecialParfaits.Count);
         for (int i = 0; i < stickerUnits.Length; i++)
         {
             stickerUnits[i].SetRecipe(allRecipeDatas[i]);

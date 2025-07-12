@@ -10,8 +10,8 @@ public class ProductUnit : MonoBehaviour
     [SerializeField] private TextMeshProUGUI priceText;
     [SerializeField] private GameObject lockImage;
     [SerializeField] private GameObject soldOutImage;
-
-    private Button productButton;
+    [SerializeField] private Button productButton;
+    
     private int productID;
     private int price;
     private bool isLock;
@@ -32,46 +32,36 @@ public class ProductUnit : MonoBehaviour
         nameText.text = data.name;
         priceText.text = data.buyPrice.ToString();
         price = data.buyPrice;
-        this.isLock = isLock;
+        // this.isLock = isLock;
         this.isSoldOut = isSoldOut;
         this.allRefresh = allRefresh;
         
         Refresh();
     }
-    
-    public void SetInfo(string name, int price, bool isLock, bool isSoldOut, Action allRefresh)
-    {
-        // productSprite = sprite;
-        nameText.text = name;
-        priceText.text = price.ToString();
-        this.price = price;
-        this.isLock = isLock;
-        this.isSoldOut = isSoldOut;
-        this.allRefresh = allRefresh;
-
-        Refresh();
-    }
 
     public void Refresh()
     {
+        Debug.Log("Refresh"+ productID);
+        if (productButton == null)
+            Debug.Log("productButton is null");
         if (isSoldOut)
         {
             lockImage.SetActive(false);
             soldOutImage.SetActive(true);
-            productButton.enabled = false;
+            productButton.interactable = false;
             priceText.text = "SOLD OUT";
         }
         else if (isLock || SaveLoadManager.Instance.Money < price)
         {
             lockImage.SetActive(true);
             soldOutImage.SetActive(false);
-            productButton.enabled = false;
+            productButton.interactable = false;
         }
         else
         {
             lockImage.SetActive(false);
             soldOutImage.SetActive(false);
-            productButton.enabled = true;
+            productButton.interactable = true;
         }
     }
 
@@ -81,6 +71,7 @@ public class ProductUnit : MonoBehaviour
         if (isLock || isSoldOut)
             return;
         SaveLoadManager.Instance.Money -= price;
+        SaveLoadManager.Instance.OpenIngredient.Add(productID);
         Debug.Log(SaveLoadManager.Instance.Money);
         isSoldOut = true;
         allRefresh?.Invoke();

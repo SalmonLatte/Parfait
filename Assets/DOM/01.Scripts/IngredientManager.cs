@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Linq;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -10,7 +12,7 @@ public class IngredientManager : MonoBehaviour
     public List<UI_Ingredient> unlockIngredients { get; private set; }
     [SerializeField] private ParfaitRecipeManager parfaitRecipeManager;
     [SerializeField] private ParfaitBuilder parfaitBuilder;
-
+   
     private int index = 0;
     private UI_Ingredient curIngredient;
 
@@ -31,15 +33,44 @@ public class IngredientManager : MonoBehaviour
             allIngredients[i].SetInfo(cSVManager.ingredientsDic[i + 100].id, cSVManager.ingredientsDic[i+100].price);
         }
 
-        if (SaveLoadManager.Instance.OpenIngredient != null)
+        // unlockIngredients.Clear();
+        // if (SaveLoadManager.Instance.OpenIngredient != null)
+        // {
+        //     foreach (var ingredient in allIngredients)
+        //     {
+        //         if (SaveLoadManager.Instance.OpenIngredient.Contains(ingredient.GetID()))
+        //         {
+        //             ingredient.CheckUnlock();
+        //             unlockIngredients.Add(ingredient);
+        //         }
+        //         else
+        //         {
+        //             ingredient.transform.SetAsLastSibling();
+        //         }
+        //     }
+        // }
+        
+        unlockIngredients.Clear();
+
+        // 1. 먼저 Dictionary로 ID → Ingredient 매핑
+        Dictionary<int, UI_Ingredient> ingredientDict = allIngredients.ToDictionary(i => i.GetID());
+
+        // 2. open 순서대로 정렬해서 넣기
+        foreach (int id in SaveLoadManager.Instance.OpenIngredient)
         {
-            foreach (var ingredient in allIngredients)
+            if (ingredientDict.TryGetValue(id, out var ingredient))
             {
-                if (SaveLoadManager.Instance.OpenIngredient.Contains(ingredient.GetID()))
-                {
-                    ingredient.CheckUnlock();
-                    unlockIngredients.Add(ingredient);
-                }
+                ingredient.CheckUnlock();
+                unlockIngredients.Add(ingredient);
+            }
+        }
+
+        // 3. 나머지 잠긴 애들만 맨 아래로 보내기
+        foreach (var ingredient in allIngredients)
+        {
+            if (!SaveLoadManager.Instance.OpenIngredient.Contains(ingredient.GetID()))
+            {
+                ingredient.transform.SetAsLastSibling();
             }
         }
         
@@ -85,10 +116,14 @@ public class IngredientManager : MonoBehaviour
 
         if (ParfaitGameManager.instance.canClick == false) { return; }
         
-        if (Input.GetMouseButtonDown(0)) // ���� Ŭ��
+        if (Input.GetMouseButtonDown(0)) // ���� Ŭ��
         {
             if (curIngredient != null)
             {
+                Sequence seq = DOTween.Sequence();
+
+                seq.Append(curIngredient.transform.DOScale(1.1f, 0.1f).SetEase(Ease.OutQuad))   // 커짐
+                    .Append(curIngredient.transform.DOScale(1f, 0.15f).SetEase(Ease.InQuad)); 
                 SelectCurrentIngredient();
             }
         }
@@ -96,6 +131,7 @@ public class IngredientManager : MonoBehaviour
 
     private void SwitchIngredient()
     {
+        Debug.Log(index);
         if (curIngredient != null)
             curIngredient.UnSelect();
 

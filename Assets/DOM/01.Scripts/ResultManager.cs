@@ -14,6 +14,7 @@ public class ResultManager : MonoBehaviour
     // [SerializeField] private TextMeshProUGUI spentMoneyText;
     [SerializeField] private TextMeshProUGUI totalMoneyText;
 
+    // List<GameObject> productUnitObjects = new List<GameObject>();
     
     List<IngredientData> ingredientDatas = new List<IngredientData>();
     List<ProductUnit> productUnits = new List<ProductUnit>();
@@ -24,8 +25,23 @@ public class ResultManager : MonoBehaviour
     private void Start()
     {
         ingredientDatas = CSVManager.instance.GetIngredientDataList();
-        SetInfo(1, 0, 0);
+        Init();
     }
+
+    public void Init()
+    {
+        for (int i = 0; i < ingredientDatas.Count; i++)
+        {
+            GameObject productUnitObject = Instantiate(productUnitPrefab, productUnitParent);
+            ProductUnit productUnit = productUnitObject.GetComponent<ProductUnit>();
+            productUnits.Add(productUnit);
+        }
+        
+        SetInfo(1, 0, 0);
+
+        
+    }
+    
     public void SetInfo(int day, int initialMoney, int earnedMoney)
     {
         dayText.text = "Day " + day;
@@ -33,12 +49,14 @@ public class ResultManager : MonoBehaviour
         earnedMoneyText.text = "+" + earnedMoney.ToString();
         totalMoneyText.text = (initialMoney + earnedMoney).ToString();
         print(earnedMoney);
+        
         for (int i = 0; i < ingredientDatas.Count; i++)
         {
             Debug.Log(ingredientDatas[i].name);
             bool isSoldOut = false;
-            bool isLock = true;
-            GameObject productUnitObject = Instantiate(productUnitPrefab, productUnitParent);
+            // bool isLock = true;
+            bool isLock = false;
+
             
             //유저가 가진 재료면 soldout, 이제 막 열린거면 unlock
             if (SaveLoadManager.Instance.OpenIngredient.Contains(ingredientDatas[i].id))
@@ -47,9 +65,7 @@ public class ResultManager : MonoBehaviour
                 isLock = false;
             
             //세팅
-            ProductUnit productUnit = productUnitObject.GetComponent<ProductUnit>();
-            productUnits.Add(productUnit);
-            productUnit.SetInfo(ingredientDatas[i], isLock, isSoldOut, AllRefresh);
+            productUnits[i].SetInfo(ingredientDatas[i], isLock, isSoldOut, AllRefresh);
         }
         AllRefresh();
     }
@@ -80,7 +96,6 @@ public class ResultManager : MonoBehaviour
                 }
             }
         }
-        Debug.Log("1111");
 
         for (int i = 0; i < productUnits.Count; i++)
         {

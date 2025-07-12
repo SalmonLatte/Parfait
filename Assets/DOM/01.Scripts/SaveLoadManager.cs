@@ -22,11 +22,11 @@ public class SaveLoadManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject); // 씬 이동에도 유지
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
-            Destroy(gameObject); // 이미 인스턴스가 있다면 중복 방지
+            Destroy(gameObject); 
         }
         Init();
     }
@@ -34,9 +34,11 @@ public class SaveLoadManager : MonoBehaviour
     private void Init()
     {
         Day = 21;
-        Money = 0;
+        Money = 15000;
         OpenRecipe = new List<int>();
-        OpenIngredient = new List<int> { 100, 102, 103, 104, 105, 106, 107,108, 109, 110, 111 };
+        // OpenIngredient = new List<int> { 100, 102, 103, 104, 105, 106, 107,108, 109, 110, 111 };
+         OpenIngredient = new List<int> { 100, 106, 107, };
+
     }
 
     //데이터 저장

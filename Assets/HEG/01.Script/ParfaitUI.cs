@@ -51,6 +51,11 @@ public class ParfaitUI : MonoBehaviour
     {
         for (int i = 0; i < 8; i++)
         {
+            if (tmpRecipe == null)
+            {
+                Debug.Log("tmpRecipe가 없음");
+                return;
+            }
             if (i == 7 || tmpRecipe[i + 1] == 0)
             {
                 parfaitToppingLayers[i].transform.GetChild(tmpRecipe[i] % 100).gameObject.SetActive(false);

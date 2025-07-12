@@ -36,11 +36,11 @@ public class Customer : MonoBehaviour
 
     public void SpawnCustomer(bool isSpecial)
     {
-        //¼Õ´Ô ÀÌ¹ÌÁö Áßº¹À¸·Î ¾ÈµÇ°Ô
+        //ï¿½Õ´ï¿½ ï¿½Ì¹ï¿½ï¿½ï¿½ ï¿½ßºï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ÈµÇ°ï¿½
         cur = GetCount();
         customerImage.sprite = customers[cur];
         ChatEffect(isSpecial);
-        //¸¸¾à Æ¯º° ¼Õ´ÔÀÌ¸é timeSlider³ª¿À°í ÀÛµ¿ÇÏ°Ô
+        //ï¿½ï¿½ï¿½ï¿½ Æ¯ï¿½ï¿½ ï¿½Õ´ï¿½ï¿½Ì¸ï¿½ timeSliderï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ûµï¿½ï¿½Ï°ï¿½
         if (isSpecial)
         {
             AudioManager.Instance.PlaySFX("Special");
@@ -102,13 +102,13 @@ public class Customer : MonoBehaviour
 
             float ratio = remaining / duration;
 
-            // 1/3 Áö³µÀ¸¸é ¹«Ç¥Á¤
+            // 1/3 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ç¥ï¿½ï¿½
             if (ratio <= 2f / 3f)
             {
                 faceImage.sprite = faceSprit[1];
             }
 
-            // 2/3 Áö³µÀ¸¸é È­³²
+            // 2/3 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È­ï¿½ï¿½
             if (ratio <= 1f / 3f)
             {
                 faceImage.sprite = faceSprit[2];
@@ -156,6 +156,9 @@ public class Customer : MonoBehaviour
 
     private void ParfaitClear()
     {
+        if (tmpData == null)
+            return;
+        
         for (int i = 0; i < 8; i++)
         {
             if (i == 7 || tmpData.ingredientIds[i + 1] == 0)
@@ -234,10 +237,10 @@ public class Customer : MonoBehaviour
     private Tween Shake()
     {
         Tween shake = customerObject.DOShakeAnchorPos(
-            duration: 0.5f,            // Èçµé¸®´Â ½Ã°£
-            strength: new Vector2(60f, 0f),  // ÁÂ¿ì Èçµé¸² °­µµ (XÃà¸¸)
-            vibrato: 30,              // Áøµ¿ È½¼ö
-            randomness: 10f,          // ¹«ÀÛÀ§ Á¤µµ
+            duration: 0.5f,            // ï¿½ï¿½é¸®ï¿½ï¿½ ï¿½Ã°ï¿½
+            strength: new Vector2(60f, 0f),  // ï¿½Â¿ï¿½ ï¿½ï¿½é¸² ï¿½ï¿½ï¿½ï¿½ (Xï¿½à¸¸)
+            vibrato: 30,              // ï¿½ï¿½ï¿½ï¿½ È½ï¿½ï¿½
+            randomness: 10f,          // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             snapping: false,
             fadeOut: true
         );

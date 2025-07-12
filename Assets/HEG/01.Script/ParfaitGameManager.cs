@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class ParfaitGameManager : MonoBehaviour
 {
+    public RectTransform titleImage;
+    
     public static ParfaitGameManager instance;
     public int currentDay = 1;
 
@@ -53,14 +56,20 @@ public class ParfaitGameManager : MonoBehaviour
 
     private void Start()
     {
+        //íƒ€ì´í‹€ ì• ë‹ˆë©”ì´ì…˜
+        titleImage.DOAnchorPosY(titleImage.anchoredPosition.y + 10f, 0.4f)
+            .SetEase(Ease.InOutSine)
+            .SetLoops(-1, LoopType.Yoyo);
+        
+        //ì˜¤ëŠ˜ ë‚ ì§œ
         currentDay = SaveLoadManager.Instance.Day;
 
         IngredientManager.Instance.Init();
         recipeManager.Init();
 
-        //±× ÁÖ Æ¯º°¼Õ´Ô °íÁ¤ ÀÎ¿ø ¼ö¶û, ÃÖ´ë ÀÎ¿ø °è»ê
+        //ï¿½ï¿½ ï¿½ï¿½ Æ¯ï¿½ï¿½ï¿½Õ´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Î¿ï¿½ ï¿½ï¿½ï¿½ï¿½, ï¿½Ö´ï¿½ ï¿½Î¿ï¿½ ï¿½ï¿½ï¿½
         (specialFixedGeustCount, specialMaxGeustCount) = GetSpecialGuestLimit(currentDay);
-        // ÇÏ·ç Å¸ÀÌ¸Ó ½ÃÀÛ
+        // ï¿½Ï·ï¿½ Å¸ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½ï¿½
         StartDay();
     }
 
@@ -73,9 +82,9 @@ public class ParfaitGameManager : MonoBehaviour
         timerSlider.maxValue = totalTime;
         timerSlider.value = totalTime;
         StartCoroutine(DayTimerRoutine());
-        //ÀÏ¹İ ¼Õ´ÔÀÎÁö Æ¯º° ¼Õ´ÔÀÎÁö ±¸ºĞÇÏ°í ¸Ş´º ÁÖ¹®
+        //ï¿½Ï¹ï¿½ ï¿½Õ´ï¿½ï¿½ï¿½ï¿½ï¿½ Æ¯ï¿½ï¿½ ï¿½Õ´ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½Ş´ï¿½ ï¿½Ö¹ï¿½
         StartCoroutine(WaitForSecond(1));
-        //¼Õ´Ô Å¸ÀÌ¸Ó
+        //ï¿½Õ´ï¿½ Å¸ï¿½Ì¸ï¿½
         StartCoroutine(SpecialGuestTimerChecker());
     }
 
@@ -94,7 +103,7 @@ public class ParfaitGameManager : MonoBehaviour
             yield return null;
         }
 
-        // Á¾·á Ã³¸®
+        // ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½
         timerSlider.value = 0f;
         timerText.text = "0:00";
         TryEndDay();
@@ -135,14 +144,14 @@ public class ParfaitGameManager : MonoBehaviour
 
         if (recipe != null)
         {
-            //ÀÌÁ¦ ¼Õ´Ô ³ª¿À°í ÆÄ¸£Æä UI¿¡ ¶ß°Ô ÇØ¾ßÇÔ
+            //ï¿½ï¿½ï¿½ï¿½ ï¿½Õ´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ä¸ï¿½ï¿½ï¿½ UIï¿½ï¿½ ï¿½ß°ï¿½ ï¿½Ø¾ï¿½ï¿½ï¿½
             parfaitBuilder.StartNewRecipe(recipe.ingredientIds);
             customer.SpawnCustomer(isSpecial);
             customer.ShowCustomerParfaitUI(recipe);
         }
         else
         {
-            Debug.Log("·¹½ÃÇÇ°¡ ¾ø½À´Ï´Ù. °ÔÀÓ Á¾·á ¶Ç´Â ´ë±â Ã³¸® ÇÊ¿ä");
+            Debug.Log("ï¿½ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½. ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ç´ï¿½ ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ ï¿½Ê¿ï¿½");
         }
     }
 
@@ -151,7 +160,7 @@ public class ParfaitGameManager : MonoBehaviour
         while (specialGeustCount < specialFixedGeustCount)
         {
             specialGuestTimer += 1f;
-            //Debug.Log($"Æ¯º° ¼Õ´Ô ´ë±â ½Ã°£: {specialGuestTimer}ÃÊ");
+            //Debug.Log($"Æ¯ï¿½ï¿½ ï¿½Õ´ï¿½ ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½: {specialGuestTimer}ï¿½ï¿½");
             yield return new WaitForSeconds(1f);
         }
     }
@@ -161,7 +170,7 @@ public class ParfaitGameManager : MonoBehaviour
         if (specialGeustCount >= specialMaxGeustCount)
             return false;
         
-        //¸¸¾à 30ÃÊ µ¿¾È Æ¯º° ¼Õ´Ô ¾È¿À¸é Æ¯º°¼Õ´Ô ¹ß»ı
+        //ï¿½ï¿½ï¿½ï¿½ 30ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Æ¯ï¿½ï¿½ ï¿½Õ´ï¿½ ï¿½È¿ï¿½ï¿½ï¿½ Æ¯ï¿½ï¿½ï¿½Õ´ï¿½ ï¿½ß»ï¿½
         if (specialGeustCount < specialFixedGeustCount)
         {
             if (specialGuestTimer >= 30)
@@ -261,7 +270,9 @@ public class ParfaitGameManager : MonoBehaviour
         }
         resultManager.SetInfo(currentDay, SaveLoadManager.Instance.Money, todayTotal);
         
+        resultUI.transform.localScale = Vector3.zero;
         resultUI.SetActive(true);
+        resultUI.transform.DOScale(1f, 0.5f).SetEase(Ease.OutBack);
     }
     
     public void SaveData() //HEG
@@ -273,7 +284,7 @@ public class ParfaitGameManager : MonoBehaviour
 
     public void ResetGame()
     {
-        // »óÅÂ ÃÊ±âÈ­
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­
         currentDay = SaveLoadManager.Instance.Day;
         todayTotal = 0;
         specialGeustCount = 0;
@@ -282,24 +293,38 @@ public class ParfaitGameManager : MonoBehaviour
         isSuccess = false;
         canClick = false;
 
-        // Àç·á, ·¹½ÃÇÇ ÃÊ±âÈ­
+        // ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­
         IngredientManager.Instance.Init();
         recipeManager.Init();
 
-        //¼Õ´Ô ÃÊ±âÈ­
+        //ï¿½Õ´ï¿½ ï¿½Ê±ï¿½È­
         customer.OutCustomer();
 
-        //ÆÄ¸£Æä ÃÊ±âÈ­
+        //ï¿½Ä¸ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­
         parfaitBuilder.RemoveReset();
 
-        // Æ¯º° ¼Õ´Ô Á¶°Ç ÃÊ±âÈ­
+        // Æ¯ï¿½ï¿½ ï¿½Õ´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­
         (specialFixedGeustCount, specialMaxGeustCount) = GetSpecialGuestLimit(currentDay);
 
-        // UI ÃÊ±âÈ­
-        resultUI.SetActive(false);
+        // UI ï¿½Ê±ï¿½È­
+        resultUI.transform.DOScale(0f, 0.5f)
+            .SetEase(Ease.InBack)
+            .OnComplete(() => resultUI.SetActive(false));
+        
 
-        // Å¸ÀÌ¸Ó ¹× ¼Õ´Ô È£Ãâ Àç½ÃÀÛ
+        // Å¸ï¿½Ì¸ï¿½ ï¿½ï¿½ ï¿½Õ´ï¿½ È£ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
         StartDay();
     }
 
+    public void Shake(RectTransform rt)
+    {
+        Sequence wave = DOTween.Sequence();
+
+        wave.Append(rt.DOAnchorPosY(rt.anchoredPosition.y, 0.3f).SetEase(Ease.InOutSine))
+            .Join(rt.DORotate(new Vector3(0, 0, 8f), 0.3f).SetEase(Ease.InOutSine))
+            .Append(rt.DOAnchorPosY(rt.anchoredPosition.y, 0.3f).SetEase(Ease.InOutSine))
+            .Join(rt.DORotate(new Vector3(0, 0, -8f), 0.3f).SetEase(Ease.InOutSine))
+            .Append(rt.DORotate(Vector3.zero, 0.2f).SetEase(Ease.OutSine));
+        wave.Play();
+    }
 }
