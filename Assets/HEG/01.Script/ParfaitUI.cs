@@ -1,5 +1,5 @@
 using NUnit.Framework;
-using UnityEditor.U2D.Aseprite;
+
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -49,13 +49,19 @@ public class ParfaitUI : MonoBehaviour
 
     public void ClearParfait()
     {
+        if (tmpRecipe == null)
+        {
+            Debug.Log("Mini tmpRecipe가 없음");
+            for (int i = 0; i < 8; i++)
+            {
+                parfaitToppingLayers[i].transform.gameObject.SetActive(false);
+                parfaitIngredientLayers[i].enabled = false;
+            }
+            return;
+        }
         for (int i = 0; i < 8; i++)
         {
-            if (tmpRecipe == null)
-            {
-                Debug.Log("tmpRecipe가 없음");
-                return;
-            }
+            
             if (i == 7 || tmpRecipe[i + 1] == 0)
             {
                 parfaitToppingLayers[i].transform.GetChild(tmpRecipe[i] % 100).gameObject.SetActive(false);

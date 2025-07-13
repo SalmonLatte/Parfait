@@ -27,27 +27,27 @@ public class ParfaitGenerateManager : MonoBehaviour
         }
     }
 
-    // ========== ÀÏ¹Ý ÆÄ¸£Æä »ý¼º ==========
+    // ========== ï¿½Ï¹ï¿½ ï¿½Ä¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ==========
     //public ParfaitRecipeData GenerateRandomNormalParfait()
     //{
     //    if (recipeManager.makeableNormalParfaitDic.Count == 0)
     //    {
-    //        Debug.LogWarning("¸¸µé ¼ö ÀÖ´Â ÀÏ¹Ý ÆÄ¸£Æä°¡ ¾ø½À´Ï´Ù!");
+    //        Debug.LogWarning("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½Ï¹ï¿½ ï¿½Ä¸ï¿½ï¿½ä°¡ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½!");
     //        return null;
     //    }
 
-    //    // µñ¼Å³Ê¸®ÀÇ °ªµéÀ» ¸®½ºÆ®·Î º¯È¯
+    //    // ï¿½ï¿½Å³Ê¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½È¯
     //    List<ParfaitRecipeData> candidates = new List<ParfaitRecipeData>(recipeManager.makeableNormalParfaitDic.Values);
 
-    //    // ¹«ÀÛÀ§ ¼±ÅÃ
+    //    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     //    int randIndex = Random.Range(0, candidates.Count);
     //    return candidates[randIndex];
     //}
 
-    // ========== ÀÏ¹Ý ÆÄ¸£Æä »ý¼º ==========
+    // ========== ï¿½Ï¹ï¿½ ï¿½Ä¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ==========
     public ParfaitRecipeData GenerateRandomNormalParfait()
     {
-        int[] layerWeights = { 5, 10, 15, 20, 20, 15, 15 }; // 1~7´Ü È®·ü (ÃÑÇÕ 100)
+        int[] layerWeights = { 0, 5, 15, 25, 25, 15, 15 }; // 1~7ï¿½ï¿½ È®ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ 100)
         int totalWeight = 100;
         int rand = Random.Range(0, totalWeight);
 
@@ -71,7 +71,7 @@ public class ParfaitGenerateManager : MonoBehaviour
             int randIndex = Random.Range(0, IngredientManager.Instance.unlockIngredients.Count);
             var uiIngredient = IngredientManager.Instance.unlockIngredients[randIndex];
             int id = uiIngredient.GetID();
-            int cost = uiIngredient.GetPirce(); // °¡°Ý Á¤º¸°¡ ÇÊ¿ä
+            int cost = uiIngredient.GetPirce(); // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¿ï¿½
 
             ingredients[i] = id;
             price += cost;
@@ -79,13 +79,13 @@ public class ParfaitGenerateManager : MonoBehaviour
 
         for (int i = layerCount; i < 8; i++)
         {
-            ingredients[i] = 0; // ³ª¸ÓÁö Ä­Àº ºóÄ­
+            ingredients[i] = 0; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ä­ï¿½ï¿½ ï¿½ï¿½Ä­
         }
 
         ParfaitRecipeData recipe = new ParfaitRecipeData
         {
-            id = -1, // °íÁ¤ ID ¾Æ´Ô
-            name = $"·£´ý ÆÄ¸£Æä ({layerCount}´Ü)",
+            id = -1, // ï¿½ï¿½ï¿½ï¿½ ID ï¿½Æ´ï¿½
+            name = $"ï¿½ï¿½ï¿½ï¿½ ï¿½Ä¸ï¿½ï¿½ï¿½ ({layerCount}ï¿½ï¿½)",
             ingredientIds = ingredients,
             price = price
         };
@@ -93,9 +93,12 @@ public class ParfaitGenerateManager : MonoBehaviour
         return recipe;
     }
 
-    // ========== Æ¯º° ÆÄ¸£Æä ¼±ÅÃ ==========
+    // ========== Æ¯ï¿½ï¿½ ï¿½Ä¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ==========
     public ParfaitRecipeData GenerateSpecialParfait()
     {
+        if (ParfaitGameManager.instance.isEndEvent)
+            return recipeManager.knownSpecialParfaits[200];
+        
         var known = recipeManager.knownSpecialParfaits;
         var unknown = recipeManager.unknownSpecialParfaits;
 
@@ -127,7 +130,8 @@ public class ParfaitGenerateManager : MonoBehaviour
 
         recipeManager.unknownSpecialParfaits.Remove(tmpData.id);
         recipeManager.knownSpecialParfaits[tmpData.id] = tmpData;
-
+        SaveLoadManager.Instance.AddRecipe(tmpData.id);
+        print(("íŠ¹ë³„ ë ˆì‹œí”¼ ì„±ê³µ!!: " +tmpData.id));
         recipeManager.AddKnownId(tmpData.id);
 
         textEffect.StartWaveEffect();

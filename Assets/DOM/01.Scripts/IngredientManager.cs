@@ -62,6 +62,7 @@ public class IngredientManager : MonoBehaviour
             {
                 ingredient.CheckUnlock();
                 unlockIngredients.Add(ingredient);
+                ingredient.transform.SetAsLastSibling();
             }
         }
 
@@ -131,7 +132,6 @@ public class IngredientManager : MonoBehaviour
 
     private void SwitchIngredient()
     {
-        Debug.Log(index);
         if (curIngredient != null)
             curIngredient.UnSelect();
 

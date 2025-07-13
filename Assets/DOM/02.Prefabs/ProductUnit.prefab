@@ -811,6 +811,7 @@ MonoBehaviour:
   priceText: {fileID: 5586200248819581981}
   lockImage: {fileID: 231169393547745153}
   soldOutImage: {fileID: 6271026600105155830}
+  productButton: {fileID: 3596030578016956960}
 --- !u!114 &3596030578016956960
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -17,10 +17,6 @@ public class ParfaitRecipeManager : MonoBehaviour
     {
         SetknownHashcode(SaveLoadManager.Instance.OpenRecipe);
         CategorizeRecipes(CSVManager.instance.parfaitRecipeDic);
-        print(knownSpecialParfaits.Count);
-        print(unknownSpecialParfaits.Count);
-        print(cantMakeSpecialParfaits.Count);
-
     }
 
     private void SetknownHashcode(List<int> openRecipeIds)
@@ -39,6 +35,7 @@ public class ParfaitRecipeManager : MonoBehaviour
 
         List<int> unlocked = IngredientManager.Instance.GetUnlockedIngredientIDs();
 
+        knownIds = new HashSet<int>(SaveLoadManager.Instance.OpenRecipe);
         foreach (var kv in allRecipes)
         {
             var recipe = kv.Value;
@@ -57,7 +54,10 @@ public class ParfaitRecipeManager : MonoBehaviour
                 cantMakeSpecialParfaits[kv.Key] = recipe;
             }
             else if (knownIds != null && knownIds.Contains(kv.Key))
+            {
                 knownSpecialParfaits[kv.Key] = recipe;
+
+            }
             else
                 unknownSpecialParfaits[kv.Key] = recipe;
         }

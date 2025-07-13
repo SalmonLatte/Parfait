@@ -1,6 +1,6 @@
 using System;
 using NUnit.Framework;
-using UnityEditor;
+
 using UnityEngine;
 
 public class TestTest : MonoBehaviour
@@ -21,7 +21,7 @@ public class TestTest : MonoBehaviour
         
     }
 
-    [MenuItem("Menu/MenuTest")]
+    //[MenuItem("Menu/MenuTest")]
     public void MenuTest()
     {
         Debug.Log("erwerwerwrw");

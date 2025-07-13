@@ -34,18 +34,29 @@ public class Customer : MonoBehaviour
     [SerializeField] private Sprite[] faceSprit;
     private int cur = -1;
 
+    [SerializeField] private Sprite friend;
+
     public void SpawnCustomer(bool isSpecial)
     {
-        //�մ� �̹��� �ߺ����� �ȵǰ�
-        cur = GetCount();
-        customerImage.sprite = customers[cur];
-        ChatEffect(isSpecial);
-        //���� Ư�� �մ��̸� timeSlider������ �۵��ϰ�
-        if (isSpecial)
+        if (ParfaitGameManager.instance.isEndEvent)
         {
-            AudioManager.Instance.PlaySFX("Special");
-            StartTimer(duration);
+            customerImage.sprite = friend;
+            customerImage.SetNativeSize();
         }
+        else
+        {
+            //�մ� �̹��� �ߺ����� �ȵǰ�
+            cur = GetCount();
+            customerImage.sprite = customers[cur];
+            ChatEffect(isSpecial);
+            //���� Ư�� �մ��̸� timeSlider������ �۵��ϰ�
+            if (isSpecial)
+            {
+                AudioManager.Instance.PlaySFX("Special");
+                StartTimer(duration);
+            }
+        }
+        
     }
 
     private void ChatEffect(bool isSpecial)
@@ -157,7 +168,15 @@ public class Customer : MonoBehaviour
     private void ParfaitClear()
     {
         if (tmpData == null)
+        {
+            Debug.Log("Customer tmpRecipe가 없음");
+            for (int i = 0; i < 8; i++)
+            {
+                parfaitToppingLayers[i].transform.gameObject.SetActive(false);
+                parfaitIngredientLayers[i].enabled = false;
+            }
             return;
+        }
         
         for (int i = 0; i < 8; i++)
         {

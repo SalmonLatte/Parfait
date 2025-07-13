@@ -30,6 +30,7 @@ public class ResultManager : MonoBehaviour
 
     public void Init()
     {
+        print("상품 INIT");
         for (int i = 0; i < ingredientDatas.Count; i++)
         {
             GameObject productUnitObject = Instantiate(productUnitPrefab, productUnitParent);
@@ -37,22 +38,19 @@ public class ResultManager : MonoBehaviour
             productUnits.Add(productUnit);
         }
         
-        SetInfo(1, 0, 0);
-
-        
+        // SetInfo(1, 0, 0);
     }
     
     public void SetInfo(int day, int initialMoney, int earnedMoney)
     {
-        dayText.text = "Day " + day;
-        initialMoneyText.text = initialMoney.ToString();
+        print("!!!!!!!!!" + initialMoney +", " + earnedMoney);
+        dayText.text = "Day " + (SaveLoadManager.Instance.Day - 1);
+        initialMoneyText.text = (initialMoney-earnedMoney).ToString();
         earnedMoneyText.text = "+" + earnedMoney.ToString();
-        totalMoneyText.text = (initialMoney + earnedMoney).ToString();
-        print(earnedMoney);
+        totalMoneyText.text = initialMoney.ToString();
         
         for (int i = 0; i < ingredientDatas.Count; i++)
         {
-            Debug.Log(ingredientDatas[i].name);
             bool isSoldOut = false;
             // bool isLock = true;
             bool isLock = false;
@@ -72,6 +70,7 @@ public class ResultManager : MonoBehaviour
 
     public void AllRefresh()
     {
+        totalMoneyText.text = SaveLoadManager.Instance.Money.ToString();
         for (int i = 0; i < productUnits.Count; i++)
         {
 

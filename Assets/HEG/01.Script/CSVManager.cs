@@ -1,11 +1,7 @@
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
-using Unity.Android.Gradle.Manifest;
 using UnityEngine;
-using static UnityEditor.Progress;
-using static UnityEngine.Rendering.DebugUI;
+
 
 [System.Serializable]
 public class IngredientData
@@ -49,7 +45,7 @@ public class CSVManager : MonoBehaviour
         TextAsset csvFile = Resources.Load<TextAsset>(fileName);
         if (csvFile == null)
         {
-            Debug.LogError("CSV ÆÄÀÏÀ» Ã£À» ¼ö ¾ø½À´Ï´Ù!");
+            Debug.LogError("CSV ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã£ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½!");
             return;
         }
         string[] lines = csvFile.text.Split('\n');
@@ -72,7 +68,7 @@ public class CSVManager : MonoBehaviour
             ingredientsDic[data.id] = data;
         }
 
-        Debug.Log("Àç·á ·Îµå ¿Ï·á: " + ingredientsDic.Count + "°³");
+        Debug.Log("ï¿½ï¿½ï¿½ ï¿½Îµï¿½ ï¿½Ï·ï¿½: " + ingredientsDic.Count + "ï¿½ï¿½");
     }
 
     private void Read_PrafaitRecipeCSV(string fileName)
@@ -80,7 +76,7 @@ public class CSVManager : MonoBehaviour
         TextAsset csvFile = Resources.Load<TextAsset>(fileName);
         if (csvFile == null)
         {
-            Debug.LogError("CSV ÆÄÀÏÀ» Ã£À» ¼ö ¾ø½À´Ï´Ù!");
+            Debug.LogError("CSV ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã£ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½!");
             return;
         }
         string[] lines = csvFile.text.Split(new[] { '\r', '\n' }, System.StringSplitOptions.RemoveEmptyEntries);
@@ -93,7 +89,7 @@ public class CSVManager : MonoBehaviour
 
             if (values.Length < 10)
             {
-                Debug.LogWarning($"ÁÙ {i + 1}: ÇÊµå °³¼ö ºÎÁ· ({values.Length}) ¡æ °Ç³Ê¶Ü");
+                Debug.LogWarning($"ï¿½ï¿½ {i + 1}: ï¿½Êµï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ({values.Length}) ï¿½ï¿½ ï¿½Ç³Ê¶ï¿½");
                 continue;
             }
 
@@ -111,7 +107,7 @@ public class CSVManager : MonoBehaviour
             parfaitRecipeDic[data.id] = data;
         }
 
-        Debug.Log("ÃÑ ÆÄ¸£Æä °³¼ö: " + parfaitRecipeDic.Count + "°³");
+        Debug.Log("ï¿½ï¿½ ï¿½Ä¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½: " + parfaitRecipeDic.Count + "ï¿½ï¿½");
     }
 
     private void Read_NormalPrafaitRecipeCSV(string fileName)
@@ -119,7 +115,7 @@ public class CSVManager : MonoBehaviour
         TextAsset csvFile = Resources.Load<TextAsset>(fileName);
         if (csvFile == null)
         {
-            Debug.LogError("CSV ÆÄÀÏÀ» Ã£À» ¼ö ¾ø½À´Ï´Ù!");
+            Debug.LogError("CSV ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã£ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½!");
             return;
         }
         string[] lines = csvFile.text.Split(new[] { '\r', '\n' }, System.StringSplitOptions.RemoveEmptyEntries);
@@ -132,7 +128,7 @@ public class CSVManager : MonoBehaviour
 
             if (values.Length < 10)
             {
-                Debug.LogWarning($"ÁÙ {i + 1}: ÇÊµå °³¼ö ºÎÁ· ({values.Length}) ¡æ °Ç³Ê¶Ü");
+                Debug.LogWarning($"ï¿½ï¿½ {i + 1}: ï¿½Êµï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ({values.Length}) ï¿½ï¿½ ï¿½Ç³Ê¶ï¿½");
                 continue;
             }
 
@@ -150,7 +146,7 @@ public class CSVManager : MonoBehaviour
             normalParfaitRecipeDic[data.id] = data;
         }
 
-        Debug.Log("ÃÑ ÆÄ¸£Æä °³¼ö: " + normalParfaitRecipeDic.Count + "°³");
+        Debug.Log("ï¿½ï¿½ ï¿½Ä¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½: " + normalParfaitRecipeDic.Count + "ï¿½ï¿½");
     }
 
     public List<IngredientData> GetIngredientDataList()

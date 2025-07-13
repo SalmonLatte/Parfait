@@ -4,9 +4,11 @@ using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class ParfaitGameManager : MonoBehaviour
 {
+    public GameObject titlePanel;
     public RectTransform titleImage;
     
     public static ParfaitGameManager instance;
@@ -44,6 +46,8 @@ public class ParfaitGameManager : MonoBehaviour
     public bool isFinish = false;
     public bool isSuccess = false;
 
+    public bool getEndTrigger = false; //해피엔딩 조건 달성
+    public bool isEndEvent = false; //해피엔딩 파르페 제작 이벤트 중
     private int currentMoney;
 
     [SerializeField] private GameObject tmpSuccess;
@@ -56,11 +60,21 @@ public class ParfaitGameManager : MonoBehaviour
 
     private void Start()
     {
+        // Time.timeScale = 0f;
+
         //타이틀 애니메이션
         titleImage.DOAnchorPosY(titleImage.anchoredPosition.y + 10f, 0.4f)
             .SetEase(Ease.InOutSine)
             .SetLoops(-1, LoopType.Yoyo);
-        
+            // .SetUpdate(true);
+
+        Init();
+        // �Ϸ� Ÿ�̸� ����
+        // StartDay();
+    }
+
+    void Init()
+    {
         //오늘 날짜
         currentDay = SaveLoadManager.Instance.Day;
 
@@ -70,10 +84,9 @@ public class ParfaitGameManager : MonoBehaviour
         //�� �� Ư���մ� ���� �ο� ����, �ִ� �ο� ���
         (specialFixedGeustCount, specialMaxGeustCount) = GetSpecialGuestLimit(currentDay);
         // �Ϸ� Ÿ�̸� ����
-        StartDay();
+        // StartDay();
     }
-
-    void StartDay()
+    public void StartDay()
     {
         dayUIText.text = "Day " + SaveLoadManager.Instance.Day.ToString();
         moneyUIText.text = SaveLoadManager.Instance.Money.ToString();
@@ -90,23 +103,34 @@ public class ParfaitGameManager : MonoBehaviour
 
     IEnumerator DayTimerRoutine()
     {
-        while (remainingTime > 0f)
+        if (!isEndEvent)
         {
-            remainingTime -= Time.deltaTime;
+            while (remainingTime > 0f)
+            {
+            
+                remainingTime -= Time.deltaTime;
 
-            timerSlider.value = remainingTime;
+                timerSlider.value = remainingTime;
 
-            int minutes = Mathf.FloorToInt(remainingTime / 60f);
-            int seconds = Mathf.FloorToInt(remainingTime % 60f);
-            timerText.text = $"{minutes:0}:{seconds:00}";
+                int minutes = Mathf.FloorToInt(remainingTime / 60f);
+                int seconds = Mathf.FloorToInt(remainingTime % 60f);
+                timerText.text = $"{minutes:0}:{seconds:00}";
 
-            yield return null;
+                yield return null;
+            }
+            
+            // ���� ó��
+
+            timerSlider.value = 0f;
+            timerText.text = "0:00";
+            TryEndDay();
         }
-
-        // ���� ó��
-        timerSlider.value = 0f;
-        timerText.text = "0:00";
-        TryEndDay();
+        else
+        {
+            timerText.text = "FRIEND";
+        }
+        yield return null;
+        
     }
 
     public IEnumerator WaitForSecond(float duration)
@@ -119,28 +143,37 @@ public class ParfaitGameManager : MonoBehaviour
 
     private void OrderCustomer()
     {
-        ParfaitRecipeData recipe;
+        ParfaitRecipeData recipe = generateManager.GenerateSpecialParfait();
+
         bool isSpecial = false;
 
-        if (ShouldBeSpecialCustomer(currentDay))
+        if (isEndEvent)
         {
-            recipe = generateManager.GenerateSpecialParfait();
-            if (recipe == null)
-            {
-                recipe = generateManager.GenerateRandomNormalParfait();
-            }
-            else
-            {
-                isSpecial = true;
-                specialGeustCount++;
-                specialGuestTimer = 0;
-            }
+            recipe = ParfaitGenerateManager.instance.GenerateSpecialParfait();
         }
         else
         {
-            recipe = generateManager.GenerateRandomNormalParfait();
-            curParfaitPrice = recipe.price;
+            if (ShouldBeSpecialCustomer(currentDay))
+            {
+                if (recipe == null)
+                {
+                    recipe = generateManager.GenerateRandomNormalParfait();
+                }
+                else
+                {
+                    isSpecial = true;
+                    specialGeustCount++;
+                    specialGuestTimer = 0;
+                }
+                curParfaitPrice = recipe.price;
+            }
+            else
+            {
+                recipe = generateManager.GenerateRandomNormalParfait();
+                curParfaitPrice = recipe.price;
+            }
         }
+        
 
         if (recipe != null)
         {
@@ -206,14 +239,32 @@ public class ParfaitGameManager : MonoBehaviour
 
     public void Fail()
     {
-        canClick = false;
-        parfaitBuilder.ShowFail();
-        customer.FailCustomer();
-        StartCoroutine(WaitForSecond(2));
+        if (isEndEvent)
+        {
+            canClick = false;
+            parfaitBuilder.ShowFail();
+            // parfaitBuilder.Remove();
+            ParfaitRecipeData recipe = ParfaitGenerateManager.instance.GenerateSpecialParfait();
+            parfaitBuilder.StartNewRecipe(recipe.ingredientIds);
+            // print("실패: " + parfaitBuilder.targetRecipe);
+        }
+        else
+        {
+            canClick = false;
+            parfaitBuilder.ShowFail();
+            customer.FailCustomer();
+            StartCoroutine(WaitForSecond(2));
+        }
+        
     }
 
     public void Success()
     {
+        if (isEndEvent)
+        {
+            CutsceneManager.Instance.HappyEnding02();
+            print("해피 엔딩 마지막 컷씬 출력");
+        }
         isSuccess = true;
         canClick = false;
         generateManager.SuccessUnknowRecipe();
@@ -258,17 +309,30 @@ public class ParfaitGameManager : MonoBehaviour
     private void EndDay()
     {
         StopAllCoroutines();
-        if (currentDay >= 30 && recipeManager.knownSpecialParfaits.Count < 12)
+        SaveLoadManager.Instance.Save();
+
+        print(" ++++++++++++" + SaveLoadManager.Instance.OpenRecipe.Count );
+        if (getEndTrigger)
         {
-            tmpFail.SetActive(true);
+            CutsceneManager.Instance.HappyEnding01();
+        }
+        
+        if (SaveLoadManager.Instance.Day >= 30 && SaveLoadManager.Instance.OpenRecipe.Count < 12)
+        {
+            print("쳑ㄱㄷ" + currentDay);
+            CutsceneManager.Instance.NormalEnding();
+
+            // tmpFail.SetActive(true);
             return;
         }
-        else if (currentDay < 31 && recipeManager.knownSpecialParfaits.Count >= 12)
+        else if (SaveLoadManager.Instance.Day < 31 && SaveLoadManager.Instance.OpenRecipe.Count >= 12)
         {
-            tmpSuccess.SetActive(true);
+            CutsceneManager.Instance.HappyEnding01();
+
+            // tmpSuccess.SetActive(true);
             return;
         }
-        resultManager.SetInfo(currentDay, SaveLoadManager.Instance.Money, todayTotal);
+        resultManager.SetInfo(SaveLoadManager.Instance.Day, SaveLoadManager.Instance.Money, todayTotal);
         
         resultUI.transform.localScale = Vector3.zero;
         resultUI.SetActive(true);
@@ -279,7 +343,7 @@ public class ParfaitGameManager : MonoBehaviour
     {
         SaveLoadManager.Instance.Day += 1;
         SaveLoadManager.Instance.Money += todayTotal;
-        SaveLoadManager.Instance.OpenRecipe = recipeManager.GetKnownRecipeIds();
+        // SaveLoadManager.Instance.OpenRecipe = recipeManager.GetKnownRecipeIds();
     }
 
     public void ResetGame()
@@ -326,5 +390,47 @@ public class ParfaitGameManager : MonoBehaviour
             .Join(rt.DORotate(new Vector3(0, 0, -8f), 0.3f).SetEase(Ease.InOutSine))
             .Append(rt.DORotate(Vector3.zero, 0.2f).SetEase(Ease.OutSine));
         wave.Play();
+    }
+    
+    //타이틀
+    public void OnClickLoad()
+    {
+        AudioManager.Instance.PlaySFX("Biscket");
+        titlePanel.SetActive(false);
+        SaveLoadManager.Instance.Load();
+        Init();
+        CalanderManager.Instance.Init();
+
+    }
+    
+    public void OnClickStart()
+    {
+        AudioManager.Instance.PlaySFX("Biscket");
+        titlePanel.SetActive(false);
+        print("스타트");
+        SaveLoadManager.Instance.Reset();
+        ManagerInit();
+    }
+
+    public void ManagerInit()
+    {
+        Init();
+        CalanderManager.Instance.Init();
+        CutsceneManager.Instance.Intro();
+    }
+    
+    
+    ////// 엔딩
+    public void StartHappyEndDay()
+    {
+        isEndEvent = true;
+        totalTime = 10000;
+        ResetGame();
+    }
+    
+    //타이틀로
+    public void ResetScene()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

@@ -149,7 +149,6 @@ GameObject:
   - component: {fileID: 3037480232107118671}
   - component: {fileID: 3061649880932391658}
   - component: {fileID: 8881649944820188382}
-  - component: {fileID: 2273414976546493233}
   m_Layer: 5
   m_Name: Panel_Result
   m_TagString: Untagged
@@ -216,24 +215,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &2273414976546493233
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 604808402456807139}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 921f833a5408f44b8a2443b34d511e35, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  productUnitPrefab: {fileID: 5625483288738652096, guid: a5bd7b2ceb3d445e99d9f68206bd97bb, type: 3}
-  productUnitParent: {fileID: 1016045429176068965}
-  dayText: {fileID: 1933350697405745723}
-  initialMoneyText: {fileID: 3399845457356823039}
-  earnedMoneyText: {fileID: 3632353740701086631}
-  totalMoneyText: {fileID: 9200009354704286787}
 --- !u!1 &1237684665052083839
 GameObject:
   m_ObjectHideFlags: 0
@@ -2490,3 +2471,4 @@ MonoBehaviour:
   priceText: {fileID: 0}
   lockImage: {fileID: 0}
   soldOutImage: {fileID: 0}
+  productButton: {fileID: 0}

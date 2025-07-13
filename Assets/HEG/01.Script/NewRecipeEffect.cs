@@ -16,16 +16,16 @@ public class NewRecipeEffect : MonoBehaviour
     
     public void StartWaveEffect()
     {
-        subtitleText.text = "»õ·Î¿î ·¹½ÃÇÇ È¹µæ!";
+        subtitleText.text = "ìƒˆë¡œìš´ ë ˆì‹œí”¼ íšë“!";
         StartCoroutine(AnimateWave(subtitleText));
     }
 
     IEnumerator PlayNewRecipeEffect()
     {
         AudioManager.Instance.PlaySFX("Fanfarate");
-        // 1. Å¸ÀÌÆ² ÆË È¿°ú
+        // 1. Å¸ï¿½ï¿½Æ² ï¿½ï¿½ È¿ï¿½ï¿½
         effect.SetActive(true);
-        titleText.text = "»õ·Î¿î ·¹½ÃÇÇ È¹µæ!";
+        titleText.text = "ìƒˆë¡œìš´ ë ˆì‹œí”¼ íšë“!";
         titleText.transform.localScale = Vector3.zero;
         titleText.transform.DOScale(1.2f, 0.8f).SetEase(Ease.OutBack).SetLoops(2, LoopType.Yoyo);
 
@@ -33,7 +33,7 @@ public class NewRecipeEffect : MonoBehaviour
 
         effect.SetActive(false);
 
-        // 2. ¼­ºê ÅØ½ºÆ® wave È¿°ú
+        // 2. ï¿½ï¿½ï¿½ï¿½ ï¿½Ø½ï¿½Æ® wave È¿ï¿½ï¿½
         //subtitleText.text = recipeName;
 
     }

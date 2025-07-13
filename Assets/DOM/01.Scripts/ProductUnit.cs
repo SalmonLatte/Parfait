@@ -21,7 +21,7 @@ public class ProductUnit : MonoBehaviour
 
     private void Awake()
     {
-        productButton = transform.GetComponent<Button>();
+        // productButton = transform.GetComponent<Button>();
         productButton.onClick.AddListener(Buy);
     }
 
@@ -41,7 +41,6 @@ public class ProductUnit : MonoBehaviour
 
     public void Refresh()
     {
-        Debug.Log("Refresh"+ productID);
         if (productButton == null)
             Debug.Log("productButton is null");
         if (isSoldOut)
@@ -70,8 +69,10 @@ public class ProductUnit : MonoBehaviour
         Debug.Log("$$$$$$$$$$$" + isLock + ", " + isSoldOut);
         if (isLock || isSoldOut)
             return;
+        AudioManager.Instance.PlaySFX("Coin");
         SaveLoadManager.Instance.Money -= price;
         SaveLoadManager.Instance.OpenIngredient.Add(productID);
+        SaveLoadManager.Instance.Save();
         Debug.Log(SaveLoadManager.Instance.Money);
         isSoldOut = true;
         allRefresh?.Invoke();

@@ -6,7 +6,8 @@ using UnityEngine;
 public class CalanderManager : MonoBehaviour
 {
     public static CalanderManager Instance;
-    
+
+    [SerializeField] private GameObject calenderPanel;
     [SerializeField] private int curDay = 1;
     [SerializeField] private RectTransform dayMarker;
     [SerializeField] private StickerUnit[] stickerUnits;
@@ -36,11 +37,19 @@ public class CalanderManager : MonoBehaviour
         
         List<ParfaitRecipeData> allRecipeDatas = CSVManager.instance.parfaitRecipeDic.Values.ToList();
         
+        calenderPanel.SetActive(true);
         // Debug.Log(parfaitRecipeManager.unknownSpecialParfaits.Count);
         for (int i = 0; i < stickerUnits.Length; i++)
         {
             stickerUnits[i].SetRecipe(allRecipeDatas[i]);
         }
+    
+        for (int i = 0; i < SaveLoadManager.Instance.OpenRecipe.Count; i++)
+        {
+            GetRecipe(SaveLoadManager.Instance.OpenRecipe[i]);
+        }
+        calenderPanel.SetActive(false);
+
     }
 
     void SetDayMarker()

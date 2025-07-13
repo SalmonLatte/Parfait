@@ -6,21 +6,23 @@ using UnityEngine.EventSystems;
 
 public class StickerUnit : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
+    [SerializeField] private  ParfaitUI parfaitUI;
     [SerializeField] private GameObject Decription;
     [SerializeField] private TextMeshProUGUI nameText;
     [SerializeField] private TextMeshProUGUI decriptionText;
+    [SerializeField] private GameObject lockImage;
     private RectTransform background;
     
     public ParfaitRecipeData recipeData;
     private bool isActive;
 
-    private void Start()
-    {
-        background = Decription.GetComponent<RectTransform>();
-    }
 
     public void SetRecipe(ParfaitRecipeData recipeData)
     {
+        background = Decription.GetComponent<RectTransform>();
+
+        parfaitUI.ShowCustomerParfaitUI(recipeData);
+            
         this.recipeData = recipeData;
         nameText.text = recipeData.name;
         decriptionText.text = recipeData.menu;
@@ -33,8 +35,13 @@ public class StickerUnit : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         float width = Mathf.Max(size1.x, size2.x);
         float height = size1.y + size2.y;
 
-        Vector2 padding = new Vector2(40f, 40f);
-        background.sizeDelta = new Vector2(width, height) + padding;
+        float originalHeight = background.sizeDelta.y;
+        Vector2 padding = new Vector2(110f, 0f);
+        background.sizeDelta = new Vector2(width, originalHeight) + padding;
+ 
+        lockImage.SetActive(true);
+        parfaitUI.gameObject.SetActive(false);
+        Decription.SetActive(false);
     }
 
     void CheckActive()
@@ -44,15 +51,26 @@ public class StickerUnit : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     
     public void OnPointerEnter(PointerEventData eventData)
     {
-        Debug.Log("마우스 들어옴");
-        transform.DOPunchScale(Vector3.one * 0.2f, 0.3f, 10, 1);
+        
+        transform.DOPunchScale(Vector3.one * 0.2f, 0.3f, 10, 1)
+            .OnKill(() => transform.localScale = new Vector3(0.6f, 0.6f, 0.6f))
+            .OnComplete(() => transform.localScale = new Vector3(0.6f, 0.6f, 0.6f));
+        AudioManager.Instance.PlaySFX("Cake");
+        // Decription.SetActive(true);
+
+        transform.SetAsLastSibling();
         if (isActive)
             Decription.SetActive(true);
+
+        // transform.localScale = new Vector3(0.8f, 0.8f, 0.8f);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        Debug.Log("마우스 나감");
+        // Decription.SetActive(false);
+
+        transform.localScale = new Vector3(0.6f, 0.6f, 0.6f);
+
         if (isActive)
             Decription.SetActive(false);
 
@@ -61,5 +79,7 @@ public class StickerUnit : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     public void ActiveSticker()
     {
         isActive = true;
+        lockImage.SetActive(false);
+        parfaitUI.gameObject.SetActive(true);
     }
 }

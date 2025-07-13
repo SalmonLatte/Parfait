@@ -51,18 +51,18 @@ public class ParfaitBuilder : MonoBehaviour
 
     public void OnIngredientClicked(int id)
     {
-        // ³Ê¹« ¸¹ÀÌ ½×À½
+        // ï¿½Ê¹ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         if (currentParfait.Count >= targetRecipe.Length)
         {
-            Debug.Log("Æ²·È½À´Ï´Ù!");
+            Debug.Log("Æ²ï¿½È½ï¿½ï¿½Ï´ï¿½!");
             ParfaitGameManager.instance.Fail();
             return;
         }
 
-        // Æ²·È´ÂÁö ½Ç½Ã°£ È®ÀÎ
+        // Æ²ï¿½È´ï¿½ï¿½ï¿½ ï¿½Ç½Ã°ï¿½ È®ï¿½ï¿½
         if (targetRecipe[currentParfait.Count] != id)
         {
-            Debug.Log("Æ²·È½À´Ï´Ù!");
+            Debug.Log("Æ²ï¿½È½ï¿½ï¿½Ï´ï¿½!");
             ParfaitGameManager.instance.Fail();
             return;
         }
@@ -84,7 +84,7 @@ public class ParfaitBuilder : MonoBehaviour
             RectTransform rectTransform = parfaitToppingLayers[click].transform.GetChild(id % 100).GetComponent<RectTransform>();
 
             Vector3 original = rectTransform.anchoredPosition;
-            Vector3 start = original + new Vector3(0, 400); // À§¿¡¼­ ½ÃÀÛ
+            Vector3 start = original + new Vector3(0, 400); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
             rectTransform.anchoredPosition = start;
             Vector3 originalScale = rectTransform.localScale;
@@ -109,7 +109,7 @@ public class ParfaitBuilder : MonoBehaviour
 
         RectTransform rect = layer.GetComponent<RectTransform>();
         Vector3 originalPos = rect.anchoredPosition;
-        Vector3 startPos = originalPos + new Vector3(0, 200); // À§¿¡¼­ ½ÃÀÛ
+        Vector3 startPos = originalPos + new Vector3(0, 200); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
         rect.anchoredPosition = startPos;
 
@@ -164,13 +164,13 @@ public class ParfaitBuilder : MonoBehaviour
         }
         click = 0;
     }
-    //¼º°ø º¸¿©ÁÖ±â
+    //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ö±ï¿½
     public void ShowSucceess()
     {
         StartCoroutine(Success());
     }
 
-    //½ÇÆÐ º¸¿©ÁÖ±â
+    //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ö±ï¿½
     public void ShowFail()
     {
         StartCoroutine(Fail());
@@ -196,6 +196,8 @@ public class ParfaitBuilder : MonoBehaviour
         ClearVisualStack();
         yield return new WaitForSeconds(0.5f);
         ResetParfait();
+        if (ParfaitGameManager.instance.isEndEvent)
+            ParfaitGameManager.instance.canClick = true;
     }
 
     IEnumerator Success()
